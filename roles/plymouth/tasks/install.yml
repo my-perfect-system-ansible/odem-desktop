@@ -46,14 +46,14 @@
     replace: "{{ plymouth_default_theme }}"
   become: true
 
-- name: Copy bootsplash background image
-  ansible.builtin.copy:
-    src: "/boot/grub/themes/{{ plymouth_default_theme }}/background.png"
-    dest: "{{ plymouth_themes_dir }}/{{ plymouth_default_theme }}/"
-    owner: root
-    group: root
-    mode: "0644"
-  become: true
+# - name: Copy bootsplash background image
+#   ansible.builtin.copy:
+#     src: "/boot/grub/themes/{{ plymouth_default_theme }}/background.png"
+#     dest: "{{ plymouth_themes_dir }}/{{ plymouth_default_theme }}/"
+#     owner: root
+#     group: root
+#     mode: "0644"
+#   become: true
 
 # - name: "DESK_PLYMOUTH_INSTALL - plymouth-set-default-theme"
 #   ansible.builtin.command: "plymouth-set-default-theme {{ plymouth_default_theme }}"
