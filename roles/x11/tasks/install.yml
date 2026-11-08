@@ -1,6 +1,14 @@
 ---
-- name: Install X11 packages
+- name: Install X11 packages (Debian)
   ansible.builtin.package:
     name: "{{ x11_packages }}"
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install X11 packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y xorg-x11-server-Xorg xorg-x11-drv-nouveau xterm glx-utils mesa-demos freeglut-devel glm-devel libao-devel libXinerama-devel libXft-devel mesa-libGLU-devel
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_x11
+  changed_when: "'Nothing to do' not in dnf_install_x11.stdout"
   become: true

@@ -1,9 +1,10 @@
 ---
-- name: Install kanata apt packages
+- name: Install kanata apt packages (Debian)
   ansible.builtin.package:
     name: "{{ kanata_packages }}"
     state: present
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Ensure uinput group exists
   ansible.builtin.group:

@@ -1,8 +1,16 @@
 ---
-- name: Install rofi and dependencies
+- name: Install rofi and dependencies (Debian)
   ansible.builtin.package:
     name: "{{ rofi_packages }}"
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install rofi (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y rofi
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_rofi
+  changed_when: "'Nothing to do' not in dnf_install_rofi.stdout"
   become: true
 
 - name: Ensure rofi themes directory exists

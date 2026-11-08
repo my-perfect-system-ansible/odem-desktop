@@ -26,4 +26,4 @@ argument_specs:
           - curl
           - gnupg
           - apt-transport-https
-        description: "APT packages required to install Brave (prereqs)"
+        description: "Packages required to install Brave (prereqs, Debian only)"

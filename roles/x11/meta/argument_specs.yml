@@ -18,4 +18,4 @@ argument_specs:
           - libxinerama-dev
           - libxft-dev
           - libglu1-mesa-dev
-        description: "List of apt packages to install for X11 stack"
+        description: "List of packages to install for X11 stack (Debian defaults)"

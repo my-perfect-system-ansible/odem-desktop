@@ -1,8 +1,16 @@
 ---
-- name: Install plymouth packages
+- name: Install plymouth packages (Debian)
   ansible.builtin.package:
     name: "{{ plymouth_packages }}"
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install plymouth (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y plymouth
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_plymouth
+  changed_when: "'Nothing to do' not in dnf_install_plymouth.stdout"
   become: true
 
 - name: Copy plymouth theme files

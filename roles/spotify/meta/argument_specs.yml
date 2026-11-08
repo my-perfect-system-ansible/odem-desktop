@@ -31,4 +31,4 @@ argument_specs:
           - curl
           - gnupg
           - apt-transport-https
-        description: "APT packages required to install Spotify (prereqs)"
+        description: "Packages required to install Spotify (prereqs, Debian only)"

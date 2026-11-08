@@ -1,12 +1,28 @@
 ---
-- name: Install thunar packages
+- name: Install thunar packages (Debian)
   ansible.builtin.package:
     name: "{{ thunar_packages }}"
     state: present
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Install thunar xfce support packages
+- name: Install thunar packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y thunar thunar-archive-plugin thunar-media-tags-plugin thunar-volman
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_thunar
+  changed_when: "'Nothing to do' not in dnf_install_thunar.stdout"
+  become: true
+
+- name: Install thunar xfce support packages (Debian)
   ansible.builtin.package:
     name: "{{ thunar_xfce_packages }}"
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install thunar xfce support packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y thunar-archive-plugin thunar-media-tags-plugin
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_thunar_xfce
+  changed_when: "'Nothing to do' not in dnf_install_thunar_xfce.stdout"
   become: true

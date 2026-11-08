@@ -8,6 +8,11 @@
     mode: "0755"
   become: true
 
+- name: Check if lightdm greeter config exists
+  ansible.builtin.stat:
+    path: "{{ lightdm_greeter_conf }}"
+  register: lightdm_greeter_conf_stat
+
 - name: Set lightdm greeter background
   ansible.builtin.lineinfile:
     path: "{{ lightdm_greeter_conf }}"
@@ -16,3 +21,4 @@
     state: present
     create: false
   become: true
+  when: lightdm_greeter_conf_stat.stat.exists

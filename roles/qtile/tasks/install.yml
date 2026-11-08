@@ -1,8 +1,16 @@
 ---
-- name: Install qtile apt packages
+- name: Install qtile apt packages (Debian)
   ansible.builtin.package:
     name: "{{ qtile_packages }}"
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install qtile build dependencies (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y python3-devel python3-pip git libxcb-devel xcb-util-keysyms-devel xcb-util-wm-devel libxkbcommon-devel libxkbcommon-x11-devel libXinerama-devel libXft-devel cairo-devel pango-devel libffi-devel
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_qtile
+  changed_when: "'Nothing to do' not in dnf_install_qtile.stdout"
   become: true
 
 - name: Create per-user qtile virtualenv

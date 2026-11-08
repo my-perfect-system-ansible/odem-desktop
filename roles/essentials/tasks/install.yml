@@ -1,20 +1,44 @@
 ---
-- name: Install base desktop packages
+- name: Install base desktop packages (Debian)
   ansible.builtin.package:
     name: "{{ essentials_packages_base }}"
     state: present
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Install sound stack packages
+- name: Install base desktop packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y galculator iw espeak lxde-icon-theme thunderbird firefox evince ddcutil
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_essentials_base
+  changed_when: "'Nothing to do' not in dnf_install_essentials_base.stdout"
+  become: true
+
+- name: Install sound stack packages (Debian)
   ansible.builtin.package:
     name: "{{ essentials_packages_sound }}"
     state: present
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Install XDG utility packages
+- name: Install sound stack packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y pavucontrol vorbis-tools
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_essentials_sound
+  changed_when: "'Nothing to do' not in dnf_install_essentials_sound.stdout"
+  become: true
+
+- name: Install XDG utility packages (Debian)
   ansible.builtin.package:
     name: "{{ essentials_packages_xdg }}"
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install XDG utility packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y xdg-utils xdg-user-dirs
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_essentials_xdg
+  changed_when: "'Nothing to do' not in dnf_install_essentials_xdg.stdout"
   become: true
 
 - name: Ensure images target dir exists

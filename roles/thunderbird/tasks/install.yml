@@ -1,6 +1,14 @@
 ---
-- name: Install Thunderbird package
+- name: Install Thunderbird package (Debian)
   ansible.builtin.package:
     name: thunderbird
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install Thunderbird (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y thunderbird
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_thunderbird
+  changed_when: "'Nothing to do' not in dnf_install_thunderbird.stdout"
   become: true

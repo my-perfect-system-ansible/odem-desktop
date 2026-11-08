@@ -15,7 +15,7 @@ argument_specs:
         - libpangocairo-1.0-0
         - lightdm
         - lightdm-gtk-greeter
-        description: Qtile apt dependencies
+        description: Qtile system dependencies
       qtile_repo_url:
         type: str
         required: false

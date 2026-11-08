@@ -1,4 +1,10 @@
 ---
+- name: Set RedHat GRUB paths
+  ansible.builtin.set_fact:
+    grubmenu_themes_dir: /boot/grub2/themes
+    grubmenu_icons_dir: /boot/grub2/icons
+  when: ansible_facts['os_family'] == 'RedHat'
+
 - name: Ensure GRUB themes destination directory exists
   ansible.builtin.file:
     path: "{{ grubmenu_themes_dir }}"
@@ -69,7 +75,20 @@
     state: present
   become: true
 
-- name: Run update-grub to apply theme
+- name: Run update-grub to apply theme (Debian)
   ansible.builtin.command: update-grub
   changed_when: true
   become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Check for UEFI GRUB config path (RedHat)
+  ansible.builtin.stat:
+    path: /boot/efi/EFI/fedora/grub.cfg
+  register: grub_uefi_path
+  when: ansible_facts['os_family'] == 'RedHat'
+
+- name: Regenerate GRUB configuration (RedHat)
+  ansible.builtin.command: "grub2-mkconfig -o {{ grub_uefi_path.stat.exists | ternary('/boot/efi/EFI/fedora/grub.cfg', '/boot/grub2/grub.cfg') }}"
+  changed_when: true
+  become: true
+  when: ansible_facts['os_family'] == 'RedHat'

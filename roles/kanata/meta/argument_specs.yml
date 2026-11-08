@@ -41,4 +41,4 @@ argument_specs:
         required: false
         default:
         - udev
-        description: Apt packages required for kanata (uinput group, udev rules)
+        description: Packages required for kanata (uinput group, udev rules; Debian only, systemd provides udev on RedHat)

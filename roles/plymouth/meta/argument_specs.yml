@@ -9,7 +9,7 @@ argument_specs:
         default:
           - plymouth
           - plymouth-themes
-        description: "Apt packages required for Plymouth"
+        description: "Packages required for Plymouth"
       plymouth_themes_dir:
         type: str
         required: false

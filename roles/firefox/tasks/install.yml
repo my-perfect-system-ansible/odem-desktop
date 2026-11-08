@@ -1,6 +1,14 @@
 ---
-- name: Install firefox-esr
+- name: Install Firefox ESR (Debian)
   ansible.builtin.package:
     name: firefox-esr
     state: present
+  become: true
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Install Firefox (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y firefox
+  when: ansible_facts['os_family'] == 'RedHat'
+  register: dnf_install_firefox
+  changed_when: "'Nothing to do' not in dnf_install_firefox.stdout"
   become: true
