@@ -1,0 +1,6 @@
+---
+- name: Install trayhub system and per-user prerequisites
+  ansible.builtin.include_tasks: install.yml
+
+- name: Deploy per-user mps-trayhub
+  ansible.builtin.include_tasks: configure.yml

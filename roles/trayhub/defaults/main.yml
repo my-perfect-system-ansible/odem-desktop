@@ -1,0 +1,17 @@
+---
+
+# Feature toggles — naming pattern: trayhub_enable_<feature>
+trayhub_enable_packages: true
+trayhub_enable_rofi: true
+
+# Regular configuration
+
+# Our app repo (the mps-trayhub tray/launcher app — cloned, then its
+# install.sh deploys per user; PyQt6 runtime via trayhub_packages).
+trayhub_repo_url: https://github.com/my-perfect-system/mps-desktop-trayhub.git
+trayhub_repo_dest: "{{ user_default_repo_dir_mps }}/mps-desktop-trayhub"
+trayhub_repo_version: main
+
+# PyQt6 runtime (same package name on Debian and Fedora).
+trayhub_packages:
+  - python3-pyqt6

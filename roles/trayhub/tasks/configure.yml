@@ -1,0 +1,18 @@
+---
+- name: Run mps-desktop-trayhub installer per user
+  ansible.builtin.command:
+    cmd: >-
+      sudo -u {{ entity.name }} /bin/bash -c
+      'HOME={{ entity.home }}
+      MPS_TRAYHUB_ENABLE_PACKAGES=0
+      MPS_TRAYHUB_ENABLE_ROFI={{ "1" if trayhub_enable_rofi | bool else "0" }}
+      {{ trayhub_repo_dest }}/install.sh'
+  register: trayhub_install
+  changed_when: true
+  loop: "{{ user_resolved }}"
+  loop_control:
+    loop_var: entity
+    label: "{{ entity.name }}"
+  when:
+    - entity.user_roles.desktop_trayhub | default(false)
+    - entity.state == 'present'

@@ -1,0 +1,36 @@
+argument_specs:
+  main:
+    short_description: Deploy the mps-trayhub tray/launcher app per user
+    options:
+      trayhub_enable_packages:
+        type: bool
+        required: false
+        default: true
+        description: Install the PyQt6 runtime (python3-pyqt6) system-wide
+      trayhub_enable_rofi:
+        type: bool
+        required: false
+        default: true
+        description: Let the repo installer wire the rofi launcher/config/theme
+          (MPS_TRAYHUB_ENABLE_ROFI)
+      trayhub_repo_url:
+        type: str
+        required: false
+        default: https://github.com/my-perfect-system/mps-desktop-trayhub.git
+        description: Git URL of our trayhub app repo
+      trayhub_repo_dest:
+        type: str
+        required: false
+        default: "{{ user_default_repo_dir_mps }}/mps-desktop-trayhub"
+        description: Clone destination of our trayhub app repo (see defaults/main.yml)
+      trayhub_repo_version:
+        type: str
+        required: false
+        default: main
+        description: Git ref (tag/branch) of our trayhub app repo to clone
+      trayhub_packages:
+        type: list
+        required: false
+        default:
+        - python3-pyqt6
+        description: PyQt6 runtime packages (same name on Debian and Fedora)
