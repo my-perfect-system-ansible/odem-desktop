@@ -1,5 +1,5 @@
 ---
-- name: Ensure per-user .config/qtile directory exists
+- name: Ensure per-user qtile config directory exists
   ansible.builtin.file:
     path: "{{ entity.home }}/.config/qtile"
     state: directory
@@ -29,21 +29,29 @@
     - entity.user_roles.desktop_qtile | default(false)
     - entity.state == 'present'
 
-- name: Render per-user qtile config templates
-  ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.entity.home }}/.config/qtile/{{ item.src | basename | regex_replace('\\.j2$', '') }}"
-    owner: "{{ item.entity.name }}"
-    group: "{{ item.entity.group | default(item.entity.name) }}"
-    mode: "0600"
-  loop: "{{ qtile_config_template_items }}"
+- name: Copy per-user qtile config
+  ansible.builtin.copy:
+    src: "{{ qtile_config_repo_dest }}/config/qtile/"
+    dest: "{{ entity.home }}/.config/qtile/"
+    remote_src: true
+    owner: "{{ entity.name }}"
+    group: "{{ entity.group | default(entity.name) }}"
+    mode: "0644"
+    directory_mode: "0700"
+  loop: "{{ user_resolved }}"
   loop_control:
-    label: "{{ item.entity.name }}/{{ item.src | basename }}"
+    loop_var: entity
+    label: "{{ entity.name }}"
+  when:
+    - entity.user_roles.desktop_qtile | default(false)
+    - entity.state == 'present'
   become: true
-- name: Render per-user .xinitrc
-  ansible.builtin.template:
-    src: "{{ qtile_config_repo_dest }}/config/qtile/.xinitrc.j2"
+
+- name: Copy per-user .xinitrc
+  ansible.builtin.copy:
+    src: "{{ qtile_config_repo_dest }}/home/.xinitrc"
     dest: "{{ entity.home }}/.xinitrc"
+    remote_src: true
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
     mode: "0700"
@@ -56,10 +64,11 @@
     - entity.state == 'present'
   become: true
 
-- name: Render per-user .xsessionrc
-  ansible.builtin.template:
-    src: "{{ qtile_config_repo_dest }}/config/qtile/.xsessionrc.j2"
+- name: Copy per-user .xsessionrc
+  ansible.builtin.copy:
+    src: "{{ qtile_config_repo_dest }}/home/.xsessionrc"
     dest: "{{ entity.home }}/.xsessionrc"
+    remote_src: true
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
     mode: "0700"
@@ -70,28 +79,20 @@
   when:
     - entity.user_roles.desktop_qtile | default(false)
     - entity.state == 'present'
-  become: true
-
-- name: Render per-user qtile-autostart-start.bash script
-  ansible.builtin.template:
-    src: "{{ qtile_config_repo_dest }}/config/qtile/qtile-autostart-start.bash.j2"
-    dest: "{{ item.entity.home }}/.local/bin/qtile-autostart-start.bash"
-    owner: "{{ item.entity.name }}"
-    group: "{{ item.entity.group | default(item.entity.name) }}"
-    mode: "0700"
-  loop: "{{ qtile_user_script_items | selectattr('src', 'equalto', 'qtile-autostart-start.bash') | list }}"
-  loop_control:
-    label: "{{ item.entity.name }}/qtile-autostart-start.bash"
   become: true
 
 - name: Copy per-user qtile helper scripts
   ansible.builtin.copy:
-    src: "{{ qtile_config_repo_dest }}/scripts/{{ item.src }}"
-    dest: "{{ item.entity.home }}/.local/bin/{{ item.src }}"
-    owner: "{{ item.entity.name }}"
-    group: "{{ item.entity.group | default(item.entity.name) }}"
+    src: "{{ qtile_config_repo_dest }}/scripts/{{ pair.0 }}"
+    dest: "{{ pair.1.home }}/.local/bin/{{ pair.0 }}"
+    remote_src: true
+    owner: "{{ pair.1.name }}"
+    group: "{{ pair.1.group | default(pair.1.name) }}"
     mode: "0700"
-  loop: "{{ qtile_user_script_items | rejectattr('src', 'equalto', 'qtile-autostart-start.bash') | list }}"
+  loop: "{{ qtile_user_scripts | product(user_resolved | selectattr('state', 'equalto', 'present') | list) | list }}"
   loop_control:
-    label: "{{ item.entity.name }}/{{ item.src }}"
+    loop_var: pair
+    label: "{{ pair.1.name }}/{{ pair.0 }}"
+  when:
+    - pair.1.user_roles.desktop_qtile | default(false)
   become: true

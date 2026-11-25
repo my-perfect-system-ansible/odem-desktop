@@ -1,6 +1,4 @@
 ---
-- name: Compute qtile per-user facts
-  ansible.builtin.include_tasks: facts.yml
 - name: Install qtile system and per-user prerequisites
   ansible.builtin.include_tasks: install.yml
 

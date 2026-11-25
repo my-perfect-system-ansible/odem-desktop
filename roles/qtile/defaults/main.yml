@@ -1,5 +1,7 @@
 ---
 
+# Qtile system dependencies (RedHat build prerequisites install inline in
+# tasks/install.yml via the dnf CLI).
 qtile_packages:
   - python3-psutil
   - python3-pip
@@ -11,12 +13,14 @@ qtile_packages:
   - lightdm
   - lightdm-gtk-greeter
 
+# Upstream qtile source, cloned and pip-installed per user into a venv.
 qtile_repo_url: https://github.com/qtile/qtile
 qtile_repo_version: v0.31.0
 qtile_repo_dest: ~/venvs/qtile/src
 
-# Our config repo (templates rendered by this role; distinct from the upstream
-# qtile source repo cloned per user below).
+# Our config repo (plain files, copied per user — all site/user-specific
+# values live in its config/qtile/settings.py; distinct from the upstream
+# qtile source repo above).
 qtile_config_repo_url: https://github.com/my-perfect-system/mps-desktop-qtile.git
 qtile_config_repo_dest: "{{ user_default_repo_dir_mps }}/mps-desktop-qtile"
 qtile_config_repo_version: main
@@ -36,43 +40,3 @@ qtile_local_bin_scripts:
 qtile_user_scripts:
   - qtile-autostart-start.bash
   - qtile-autostart-stop.bash
-
-qtile_wallpapers: []
-qtile_wallpapers_dir: /usr/share/images/desktop/wallpaper
-
-qtile_vpn_admin_host: bks-adm
-qtile_vpn_pub_host: pub-all
-qtile_kanata_state_path: /tmp/kanata.state
-
-qtile_screenlayout_hive_cmd: ".screenlayout/layout_hive.bash"
-qtile_keepass_bin: ""
-
-qtile_autostart_keyboard: de
-qtile_autostart_xset_rate: "xset r rate 250 50"
-qtile_autostart_displays:
-  - name: PRIMARY
-    output: HDMI-1
-    mode: 3840x2160
-    position: 0x0
-    scale: 1.0x1.0
-    primary: true
-  - name: SECONDARY
-    output: DP-1
-    mode: 1920x1080
-    position: 3840x1080
-    scale: 1.6x1.6
-    primary: false
-
-qtile_scratchpad_dropdowns:
-  - name: pavu
-    cmd: pavucontrol
-  - name: term
-    cmd: "kitty bash"
-  - name: calc
-    cmd: galculator
-  - name: htop
-    cmd: "kitty htop"
-  - name: hermes
-    cmd: "kitty ssh dev-hermes chat"
-  - name: opencode
-    cmd: "kitty ssh dev-oc chat"

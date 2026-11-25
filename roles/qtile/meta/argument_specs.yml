@@ -1,6 +1,6 @@
 argument_specs:
   main:
-    short_description: Install qtile + per-user templated Python config
+    short_description: Install qtile + per-user config copied from the mps-desktop-qtile repo
     options:
       qtile_packages:
         type: list
@@ -21,21 +21,6 @@ argument_specs:
         required: false
         default: https://github.com/qtile/qtile
         description: Git URL of the qtile repository
-      qtile_config_repo_url:
-        type: str
-        required: false
-        default: https://github.com/my-perfect-system/mps-desktop-qtile.git
-        description: Git URL of our qtile config repo (templates + xsession + scripts)
-      qtile_config_repo_dest:
-        type: str
-        required: false
-        default: "{{ user_default_repo_dir_mps }}/mps-desktop-qtile"
-        description: Clone destination of our qtile config repo (see defaults/main.yml)
-      qtile_config_repo_version:
-        type: str
-        required: false
-        default: main
-        description: Git ref (tag/branch) of our qtile config repo to clone
       qtile_repo_version:
         type: str
         required: false
@@ -46,6 +31,21 @@ argument_specs:
         required: false
         default: ~/venvs/qtile/src
         description: Per-user path to clone the qtile repo (use ~ for home dir)
+      qtile_config_repo_url:
+        type: str
+        required: false
+        default: https://github.com/my-perfect-system/mps-desktop-qtile.git
+        description: Git URL of our qtile config repo (config + xsession + scripts)
+      qtile_config_repo_dest:
+        type: str
+        required: false
+        default: "{{ user_default_repo_dir_mps }}/mps-desktop-qtile"
+        description: Clone destination of our qtile config repo (see defaults/main.yml)
+      qtile_config_repo_version:
+        type: str
+        required: false
+        default: main
+        description: Git ref (tag/branch) of our qtile config repo to clone
       qtile_venv_path:
         type: str
         required: false
@@ -88,74 +88,3 @@ argument_specs:
         - qtile-autostart-start.bash
         - qtile-autostart-stop.bash
         description: Qtile scripts to deploy to ~/.local/bin/ (per-user)
-      qtile_vpn_admin_host:
-        type: str
-        required: false
-        default: bks-adm
-        description: Hostname of the admin VPN connection (FortiClient widget)
-      qtile_vpn_pub_host:
-        type: str
-        required: false
-        default: pub-all
-        description: Hostname of the public VPN connection (FortiClient widget)
-      qtile_kanata_state_path:
-        type: str
-        required: false
-        default: /tmp/kanata.state
-        description: Path to the kanata state file (must match odem.desktop.kanata.kanata_state_path)
-      qtile_autostart_keyboard:
-        type: str
-        required: false
-        default: de
-        description: Keyboard layout for setxkbmap in qtile-autostart-start.bash
-      qtile_autostart_xset_rate:
-        type: str
-        required: false
-        default: xset r rate 250 50
-        description: xset rate command for qtile-autostart-start.bash
-      qtile_autostart_displays:
-        type: list
-        required: false
-        default:
-        - name: PRIMARY
-          output: HDMI-1
-          mode: 3840x2160
-          position: 0
-          scale: 1.0x1.0
-          primary: true
-        - name: SECONDARY
-          output: DP-1
-          mode: 1920x1080
-          position: 3840x1080
-          scale: 1.6x1.6
-          primary: false
-        description: Display list for xrandr in qtile-autostart-start.bash
-      qtile_scratchpad_dropdowns:
-        type: list
-        required: false
-        default:
-        - name: pavu
-          cmd: pavucontrol
-        - name: term
-          cmd: kitty bash
-        - name: calc
-          cmd: galculator
-        - name: htop
-          cmd: kitty htop
-        - name: hermes
-          cmd: kitty ssh dev-hermes chat
-        - name: opencode
-          cmd: kitty ssh dev-oc chat
-        description: Scratchpad DropDown definitions for qtile-scratchpad.py
-      qtile_wallpapers:
-        type: list
-        required: false
-        default: []
-        description: List of wallpaper filenames. If empty, falls back to essentials_wallpapers_list.
-          Keys are mapped 1-0.
-      qtile_wallpapers_dir:
-        type: str
-        required: false
-        default: /usr/share/images/desktop/wallpaper
-        description: Directory where wallpaper images are deployed (used for building
-          qtile wallpaper dict)
