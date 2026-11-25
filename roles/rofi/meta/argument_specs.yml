@@ -8,12 +8,21 @@ argument_specs:
         default:
         - rofi
         description: Rofi packages
-      rofi_dotfiles:
-        type: list
+      rofi_repo_url:
+        type: str
         required: false
-        default:
-        - .config/rofi
-        description: Per-user rofi dotfile path
+        default: https://github.com/my-perfect-system/mps-desktop-rofi.git
+        description: mps-desktop-rofi git repository URL
+      rofi_repo_dest:
+        type: str
+        required: false
+        default: "{{ user_default_repo_dir_mps }}/mps-desktop-rofi"
+        description: Destination path for the mps-desktop-rofi clone
+      rofi_repo_version:
+        type: str
+        required: false
+        default: main
+        description: Branch or tag of the mps-desktop-rofi repository to deploy
       rofi_themes_dir:
         type: str
         required: false

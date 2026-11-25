@@ -1,4 +1,55 @@
 ---
+- name: Ensure repos directory exists
+  ansible.builtin.file:
+    path: "{{ user_default_repo_dir_mps }}"
+    state: directory
+    mode: "2775"
+    owner: "root"
+    group: "{{ user_default_admin_group }}"
+  become: true
+
+- name: Check if mps-desktop-thunar directory exists
+  ansible.builtin.stat:
+    path: "{{ thunar_repo_dest }}"
+  register: thunar_repo_dir
+
+- name: Check if mps-desktop-thunar is a Git repository
+  ansible.builtin.stat:
+    path: "{{ thunar_repo_dest }}/.git"
+  register: thunar_git_dir
+  when: thunar_repo_dir.stat.exists
+
+- name: Clone mps-desktop-thunar repository
+  ansible.builtin.git:
+    repo: "{{ thunar_repo_url }}"
+    dest: "{{ thunar_repo_dest }}"
+    version: "{{ thunar_repo_version }}"
+    force: true
+  become: true
+  when: not thunar_repo_dir.stat.exists
+
+- name: Ensure permissions for mps-desktop-thunar directory
+  ansible.builtin.file:
+    path: "{{ thunar_repo_dest }}"
+    state: directory
+    owner: "root"
+    group: "{{ user_default_admin_group }}"
+    recurse: yes
+    mode: "2775"
+  become: true
+
+- name: Pull mps-desktop-thunar repository
+  ansible.builtin.git:
+    repo: "{{ thunar_repo_url }}"
+    dest: "{{ thunar_repo_dest }}"
+    version: "{{ thunar_repo_version }}"
+    force: true
+    update: true
+  become: true
+  when:
+    - thunar_repo_dir.stat.exists
+    - thunar_git_dir.stat.exists
+
 - name: Install thunar packages (Debian)
   ansible.builtin.package:
     name: "{{ thunar_packages }}"

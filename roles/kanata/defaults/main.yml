@@ -1,5 +1,9 @@
 ---
 
+kanata_repo_url: https://github.com/my-perfect-system/mps-desktop-kanata.git
+kanata_repo_dest: "{{ user_default_repo_dir_mps }}/mps-desktop-kanata"
+kanata_repo_version: main
+
 kanata_cargo_features: cmd
 
 kanata_config_path: ~/.config/kanata/kanata.kbd

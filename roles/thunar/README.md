@@ -12,13 +12,16 @@ Install thunar + plugins and per-user dotfiles
 
 | Variable | Default | Description |
 |---|---|---|
-| `thunar_dotfiles` | `- .config/Thunar<br>- .config/xfce4` | Per-user dotfile paths to copy |
+| `thunar_repo_dest` | `{{ user_default_repo_dir_mps }}/mps-desktop-thunar` | Destination path for the cloned mps-desktop-thunar repository |
+| `thunar_repo_url` | `https://github.com/my-perfect-system/mps-desktop-thunar.git` | Git repository shipping thunar configuration |
+| `thunar_repo_version` | `main` | Branch or tag of the mps-desktop-thunar repository to use |
 | `thunar_packages` | `[6 items]` | Thunar core + plugin packages |
 | `thunar_xfce_packages` | `- xfce4-goodies<br>- xfce4-places-plugin<br>- thunar-font-manager` | XFCE4 packages used by thunar |
 
 ## Dependencies
 
 - `odem.os.user`
+- The per-user Thunar and xfce4 configuration ships from the [mps-desktop-thunar](https://github.com/my-perfect-system/mps-desktop-thunar) repository, cloned at runtime via `thunar_repo_url`.
 
 ## Example usage
 

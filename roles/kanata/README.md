@@ -26,6 +26,8 @@ Install kanata keyboard remapper + per-user systemd service
 
 - `odem.os.user`
 
+- `mps-desktop-kanata` — kanata configuration ships from this repo, cloned to `kanata_repo_dest`
+
 ## Example usage
 
 ```yaml

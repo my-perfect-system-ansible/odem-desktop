@@ -22,6 +22,9 @@ Install qtile + per-user templated Python config
 | `qtile_repo_dest` | `~/venvs/qtile/src` | Per-user path to clone the qtile repo (use ~ for home dir) |
 | `qtile_repo_url` | `https://github.com/qtile/qtile` | Git URL of the qtile repository |
 | `qtile_repo_version` | `v0.31.0` | Git ref (tag/branch) of the qtile repository to clone |
+| `qtile_config_repo_url` | `https://github.com/my-perfect-system/mps-desktop-qtile.git` | Git URL of our qtile config repo |
+| `qtile_config_repo_dest` | `{{ user_default_repo_dir_mps }}/mps-desktop-qtile` | Clone destination of our qtile config repo |
+| `qtile_config_repo_version` | `main` | Git ref of our qtile config repo |
 | `qtile_scratchpad_dropdowns` | `[6 items]` | Scratchpad DropDown definitions for qtile-scratchpad.py |
 | `qtile_user_scripts` | `- qtile-autostart-start.bash<br>- qtile-autostart-stop.bash` | Qtile scripts to deploy to ~/.local/bin/ (per-user) |
 | `qtile_venv_path` | `~/.venvs/qtile` | Python venv path for qtile (defaults to ~/.venvs/qtile to avoid collision with odem.terminal.python) |

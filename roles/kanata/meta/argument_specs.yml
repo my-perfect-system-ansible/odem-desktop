@@ -2,6 +2,21 @@ argument_specs:
   main:
     short_description: Install kanata keyboard remapper + per-user systemd service
     options:
+      kanata_repo_url:
+        type: str
+        required: false
+        default: https://github.com/my-perfect-system/mps-desktop-kanata.git
+        description: Git repository shipping the kanata configuration
+      kanata_repo_dest:
+        type: str
+        required: false
+        default: "{{ user_default_repo_dir_mps }}/mps-desktop-kanata"
+        description: Destination path for the mps-desktop-kanata repository clone
+      kanata_repo_version:
+        type: str
+        required: false
+        default: main
+        description: Branch or tag of the mps-desktop-kanata repository to clone
       kanata_cargo_features:
         type: str
         required: false

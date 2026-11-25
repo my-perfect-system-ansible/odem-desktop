@@ -43,7 +43,7 @@
       ] -%}
       {%- for entity in user_resolved if entity.state == 'present' and entity.user_roles.desktop_qtile | default(false) -%}
       {%-   for t in templates -%}
-      {%-     set _ = items.append({'entity': entity, 'src': 'dotfiles/.config/qtile/' ~ t}) -%}
+      {%-     set _ = items.append({'entity': entity, 'src': 'config/qtile/' ~ t}) -%}
       {%-   endfor -%}
       {%- endfor -%}
       {{ items }}

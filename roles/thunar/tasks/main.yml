@@ -1,6 +1,4 @@
 ---
-- name: Compute thunar per-user facts
-  ansible.builtin.include_tasks: facts.yml
 - name: Install thunar and xfce helpers
   ansible.builtin.include_tasks: install.yml
 

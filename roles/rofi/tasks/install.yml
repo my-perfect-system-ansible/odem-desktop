@@ -1,4 +1,55 @@
 ---
+- name: Ensure repos directory exists
+  ansible.builtin.file:
+    path: "{{ rofi_repo_dest | dirname }}"
+    state: directory
+    mode: "2775"
+    owner: root
+    group: "{{ user_default_admin_group }}"
+  become: true
+
+- name: Check if mps-desktop-rofi directory exists
+  ansible.builtin.stat:
+    path: "{{ rofi_repo_dest }}"
+  register: rofi_repo_dir
+
+- name: Check if mps-desktop-rofi is a Git repository
+  ansible.builtin.stat:
+    path: "{{ rofi_repo_dest }}/.git"
+  register: rofi_git_dir
+  when: rofi_repo_dir.stat.exists
+
+- name: Clone mps-desktop-rofi repository
+  ansible.builtin.git:
+    repo: "{{ rofi_repo_url }}"
+    dest: "{{ rofi_repo_dest }}"
+    version: "{{ rofi_repo_version }}"
+    force: true
+  become: true
+  when: not rofi_repo_dir.stat.exists
+
+- name: Ensure permissions for target directory
+  ansible.builtin.file:
+    path: "{{ rofi_repo_dest }}"
+    state: directory
+    owner: root
+    group: "{{ user_default_admin_group }}"
+    recurse: yes
+    mode: "2775"
+  become: true
+
+- name: Pull mps-desktop-rofi repository
+  ansible.builtin.git:
+    repo: "{{ rofi_repo_url }}"
+    dest: "{{ rofi_repo_dest }}"
+    version: "{{ rofi_repo_version }}"
+    force: true
+    update: true
+  become: true
+  when:
+    - rofi_repo_dir.stat.exists
+    - rofi_git_dir.stat.exists
+
 - name: Install rofi and dependencies (Debian)
   ansible.builtin.package:
     name: "{{ rofi_packages }}"
@@ -24,7 +75,7 @@
 
 - name: Deploy rofi themes
   ansible.builtin.copy:
-    src: "{{ role_path }}/files/dotfiles/.config/rofi/themes/{{ item }}"
+    src: "{{ rofi_repo_dest }}/config/rofi/themes/{{ item }}"
     dest: "{{ rofi_themes_dir }}/{{ item }}"
     owner: root
     group: root

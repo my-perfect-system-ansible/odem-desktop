@@ -2,9 +2,9 @@
 
 rofi_packages:
   - rofi
-
-rofi_dotfiles:
-  - .config/rofi
+rofi_repo_url: https://github.com/my-perfect-system/mps-desktop-rofi.git
+rofi_repo_dest: "{{ user_default_repo_dir_mps }}/mps-desktop-rofi"
+rofi_repo_version: main
 
 rofi_themes_dir: /usr/share/rofi/themes
 rofi_themes:

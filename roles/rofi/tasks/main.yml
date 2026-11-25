@@ -1,6 +1,4 @@
 ---
-- name: Compute rofi per-user facts
-  ansible.builtin.include_tasks: facts.yml
 - name: Install rofi and themes
   ansible.builtin.include_tasks: install.yml
 

@@ -42,7 +42,7 @@
   become: true
 - name: Render per-user .xinitrc
   ansible.builtin.template:
-    src: "dotfiles/.config/qtile/.xinitrc.j2"
+    src: "{{ qtile_config_repo_dest }}/config/qtile/.xinitrc.j2"
     dest: "{{ entity.home }}/.xinitrc"
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
@@ -58,7 +58,7 @@
 
 - name: Render per-user .xsessionrc
   ansible.builtin.template:
-    src: "dotfiles/.config/qtile/.xsessionrc.j2"
+    src: "{{ qtile_config_repo_dest }}/config/qtile/.xsessionrc.j2"
     dest: "{{ entity.home }}/.xsessionrc"
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
@@ -74,7 +74,7 @@
 
 - name: Render per-user qtile-autostart-start.bash script
   ansible.builtin.template:
-    src: "dotfiles/.config/qtile/qtile-autostart-start.bash.j2"
+    src: "{{ qtile_config_repo_dest }}/config/qtile/qtile-autostart-start.bash.j2"
     dest: "{{ item.entity.home }}/.local/bin/qtile-autostart-start.bash"
     owner: "{{ item.entity.name }}"
     group: "{{ item.entity.group | default(item.entity.name) }}"
@@ -86,7 +86,7 @@
 
 - name: Copy per-user qtile helper scripts
   ansible.builtin.copy:
-    src: "{{ role_path }}/files/scripts/{{ item.src }}"
+    src: "{{ qtile_config_repo_dest }}/scripts/{{ item.src }}"
     dest: "{{ item.entity.home }}/.local/bin/{{ item.src }}"
     owner: "{{ item.entity.name }}"
     group: "{{ item.entity.group | default(item.entity.name) }}"

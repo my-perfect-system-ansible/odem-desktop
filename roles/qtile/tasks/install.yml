@@ -1,4 +1,53 @@
 ---
+- name: Check if repo directory exists
+  ansible.builtin.file:
+    path: "{{ user_default_repo_dir_mps }}"
+    state: directory
+    mode: "0777"
+    owner: "root"
+    group: "root"
+
+- name: Check if mps-desktop-qtile directory exists
+  ansible.builtin.stat:
+    path: "{{ qtile_config_repo_dest }}"
+  register: qtile_config_repo_dir
+
+- name: Check if mps-desktop-qtile is a Git repository
+  ansible.builtin.stat:
+    path: "{{ qtile_config_repo_dest }}/.git"
+  register: qtile_config_git_dir
+  when: qtile_config_repo_dir.stat.exists
+
+- name: Clone mps-desktop-qtile repository
+  ansible.builtin.git:
+    repo: "{{ qtile_config_repo_url }}"
+    dest: "{{ qtile_config_repo_dest }}"
+    version: "{{ qtile_config_repo_version }}"
+    force: true
+  become: true
+  when: not qtile_config_repo_dir.stat.exists
+
+- name: Ensure permissions for target directory
+  ansible.builtin.file:
+    path: "{{ qtile_config_repo_dest }}"
+    state: directory
+    owner: "root"
+    group: "{{ user_default_admin_group }}"
+    recurse: yes
+    mode: "2775"
+  become: true
+
+- name: Pull mps-desktop-qtile repository
+  ansible.builtin.git:
+    repo: "{{ qtile_config_repo_url }}"
+    dest: "{{ qtile_config_repo_dest }}"
+    version: "{{ qtile_config_repo_version }}"
+    force: true
+    update: true
+  become: true
+  when:
+    - qtile_config_repo_dir.stat.exists
+    - qtile_config_git_dir.stat.exists
 - name: Install qtile apt packages (Debian)
   ansible.builtin.package:
     name: "{{ qtile_packages }}"
@@ -87,7 +136,7 @@
 
 - name: Deploy qtile xsession desktop file
   ansible.builtin.copy:
-    src: "{{ role_path }}/files/etc/qtile.desktop"
+    src: "{{ qtile_config_repo_dest }}/etc/qtile.desktop"
     dest: "{{ qtile_xsessions_path }}"
     owner: root
     group: root
@@ -103,19 +152,9 @@
     mode: "0755"
   become: true
 
-- name: Deploy qtile static helper scripts
-  ansible.builtin.copy:
-    src: "{{ role_path }}/files/scripts/{{ item }}"
-    dest: "{{ qtile_local_bin_dir }}/{{ item }}"
-    owner: root
-    group: root
-    mode: "0755"
-  loop: "{{ qtile_local_bin_scripts | difference(['qtile-startup.bash', 'qtile-reload.bash', 'qtile-restart.bash']) }}"
-  become: true
-
 - name: Render qtile-startup.bash script
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/scripts/qtile-startup.bash.j2"
+    src: "{{ qtile_config_repo_dest }}/scripts/qtile-startup.bash.j2"
     dest: "{{ qtile_local_bin_dir }}/qtile-startup.bash"
     owner: root
     group: root
@@ -124,7 +163,7 @@
 
 - name: Render qtile-reload.bash script
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/scripts/qtile-reload.bash.j2"
+    src: "{{ qtile_config_repo_dest }}/scripts/qtile-reload.bash.j2"
     dest: "{{ qtile_local_bin_dir }}/qtile-reload.bash"
     owner: root
     group: root
@@ -133,7 +172,7 @@
 
 - name: Render qtile-restart.bash script
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/scripts/qtile-restart.bash.j2"
+    src: "{{ qtile_config_repo_dest }}/scripts/qtile-restart.bash.j2"
     dest: "{{ qtile_local_bin_dir }}/qtile-restart.bash"
     owner: root
     group: root

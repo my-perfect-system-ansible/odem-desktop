@@ -13,6 +13,6 @@ thunar_xfce_packages:
   - xfce4-places-plugin
   - thunar-font-manager
 
-thunar_dotfiles:
-  - .config/Thunar
-  - .config/xfce4
+thunar_repo_url: https://github.com/my-perfect-system/mps-desktop-thunar.git
+thunar_repo_dest: "{{ user_default_repo_dir_mps }}/mps-desktop-thunar"
+thunar_repo_version: main

@@ -21,6 +21,21 @@ argument_specs:
         required: false
         default: https://github.com/qtile/qtile
         description: Git URL of the qtile repository
+      qtile_config_repo_url:
+        type: str
+        required: false
+        default: https://github.com/my-perfect-system/mps-desktop-qtile.git
+        description: Git URL of our qtile config repo (templates + xsession + scripts)
+      qtile_config_repo_dest:
+        type: str
+        required: false
+        default: "{{ user_default_repo_dir_mps }}/mps-desktop-qtile"
+        description: Clone destination of our qtile config repo (see defaults/main.yml)
+      qtile_config_repo_version:
+        type: str
+        required: false
+        default: main
+        description: Git ref (tag/branch) of our qtile config repo to clone
       qtile_repo_version:
         type: str
         required: false
