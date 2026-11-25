@@ -1,20 +1,74 @@
----
 argument_specs:
   main:
-    short_description: Configure lightdm-gtk-greeter background
+    short_description: Install X11 + WM packages, configure the lightdm greeter and per-user WM dotfiles
     options:
+      lightdm_enable_x11:
+        type: bool
+        required: false
+        default: true
+        description: Install the X11 server + build dependency packages (former odem.desktop.x11)
+      lightdm_enable_wm:
+        type: bool
+        required: false
+        default: true
+        description: Install window manager support packages and deploy the per-user
+          picom/dunst dotfiles (former odem.desktop.wm)
       lightdm_wallpaper:
         type: str
         required: false
         default: wormhole.jpg
-        description: "Wallpaper filename (must be in lightdm_wallpapers_dir)"
+        description: Wallpaper filename (must be in lightdm_wallpapers_dir)
       lightdm_wallpapers_dir:
         type: str
         required: false
         default: /usr/share/images/desktop/wallpaper
-        description: "Directory containing wallpaper images (odem.desktop.essentials deploys this)"
+        description: Directory containing wallpaper images (odem.desktop.essentials deploys this)
       lightdm_greeter_conf:
         type: str
         required: false
         default: /etc/lightdm/lightdm-gtk-greeter.conf
-        description: "Path to the lightdm gtk greeter config file"
+        description: Path to the lightdm gtk greeter config file
+      lightdm_packages_x11:
+        type: list
+        required: false
+        default:
+          - xorg
+          - xserver-xorg-video-nouveau
+          - xserver-xorg-video-vesa
+          - xterm
+          - mesa-utils
+          - freeglut3-dev
+          - libglm-dev
+          - libao-dev
+          - libxinerama-dev
+          - libxft-dev
+          - libglu1-mesa-dev
+        description: X11 server + build dependency packages (Debian defaults)
+      lightdm_packages_wm:
+        type: list
+        required: false
+        default:
+          - feh
+          - lxappearance
+          - lightdm
+          - picom
+          - xscreensaver
+          - xscreensaver-data-extra
+          - xscreensaver-gl
+          - xscreensaver-screensaver-bsod
+          - x11-utils
+          - xinit
+          - x11-xserver-utils
+          - xserver-xorg-video-amdgpu
+          - xserver-xorg-video-nvidia
+          - xserver-xorg-video-intel
+          - mesa-va-drivers
+          - mesa-vulkan-drivers
+          - lxlock
+          - xbacklight
+          - numlockx
+          - xclip
+          - dconf-cli
+          - dconf-editor
+          - dunst
+        description: Window manager support packages (Debian defaults)

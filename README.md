@@ -1,15 +1,15 @@
 # `odem.desktop` Ansible Collection
 
-Desktop GUI and window manager environment — x11, qtile (WM), rofi /
-thunar / essentials helpers, kanata keyboard remapper, firefox /
-thunderbird / brave / spotify browsers, lightdm greeter, plymouth boot
-theme, gnome-tools.
+Desktop GUI and window manager environment — qtile window manager, rofi /
+thunar / trayhub helpers, kanata keyboard remapper, lightdm greeter +
+X11 / window manager stacks, browser (firefox + brave), thunderbird,
+spotify, grubmenu themes, per-user essentials incl. GNOME tools.
 
 ## Galaxy metadata
 
 - **namespace**: `odem`
 - **name**: `desktop`
-- **version**: `0.3.1`
+- **version**: `0.5.0`
 - **dependencies**: `odem.os`, `ansible.posix`
 
 See [`galaxy.yml`](galaxy.yml) for the canonical values.
@@ -20,26 +20,21 @@ See [`galaxy.yml`](galaxy.yml) for the canonical values.
 
 | Role | Purpose |
 |---|---|
-| [`odem.desktop.firefox`](roles/firefox/README.md) | Firefox apt install. |
+| [`odem.desktop.browser`](roles/browser/README.md) | Firefox and Brave browsers (own toggle each). |
 | [`odem.desktop.thunderbird`](roles/thunderbird/README.md) | Thunderbird apt install. |
-| [`odem.desktop.brave`](roles/brave/README.md) | Brave browser (apt repo + signing key). |
 | [`odem.desktop.spotify`](roles/spotify/README.md) | Spotify client (apt repo + signing key). |
-| [`odem.desktop.lightdm`](roles/lightdm/README.md) | LightDM greeter config + wallpaper directory. |
-| [`odem.desktop.plymouth`](roles/plymouth/README.md) | Plymouth boot theme. |
 | [`odem.desktop.grubmenu`](roles/grubmenu/README.md) | GRUB theme + `/etc/default/grub` + `update-grub`. |
-| [`odem.desktop.gnometools`](roles/gnometools/README.md) | GNOME tool packages. |
-| [`odem.desktop.x11`](roles/x11/README.md) | X11 base packages. |
 
 ### Window manager + helpers (per-user)
 
 | Role | Purpose |
 |---|---|
-| [`odem.desktop.qtile`](roles/qtile/README.md) | Templated qtile config, pip venv + git clone, per-user wallpaper dict. |
+| [`odem.desktop.qtile`](roles/qtile/README.md) | Plain-file config from mps-desktop-qtile + upstream pip venv. |
 | [`odem.desktop.kanata`](roles/kanata/README.md) | Per-user rustup install, udev rules, systemd user service. |
-| [`odem.desktop.essentials`](roles/essentials/README.md) | Per-user dotfile copies + facts builders. |
-| [`odem.desktop.rofi`](roles/rofi/README.md) | Per-user dotfile + script copies + facts builders. |
-| [`odem.desktop.thunar`](roles/thunar/README.md) | Per-user dotfile copies + facts. |
-| [`odem.desktop.wm`](roles/wm/README.md) | Per-user copy loops (gated by `item.src`) + facts. |
+| [`odem.desktop.essentials`](roles/essentials/README.md) | Per-user dotfile copies + GNOME tools packages. |
+| [`odem.desktop.rofi`](roles/rofi/README.md) | Per-user dotfile + script copies. |
+| [`odem.desktop.thunar`](roles/thunar/README.md) | Per-user dotfile copies. |
+| [`odem.desktop.lightdm`](roles/lightdm/README.md) | X11 + WM packages, greeter config, per-user picom/dunst dotfiles. |
 
 ## Installation
 
@@ -60,7 +55,7 @@ ansible-galaxy collection install odem.desktop
           desktop_kanata: true
   roles:
     - odem.os.user
-    - odem.desktop.x11
+    - odem.desktop.lightdm
     - odem.desktop.qtile
 ```
 

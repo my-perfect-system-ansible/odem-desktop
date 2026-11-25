@@ -1,0 +1,3 @@
+---
+- name: Install browsers
+  ansible.builtin.include_tasks: install.yml

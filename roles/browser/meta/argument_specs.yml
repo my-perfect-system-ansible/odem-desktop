@@ -1,0 +1,38 @@
+argument_specs:
+  main:
+    short_description: Install Firefox and Brave browsers
+    options:
+      browser_enable_firefox:
+        type: bool
+        required: false
+        default: true
+        description: Install Firefox (firefox-esr on Debian, firefox on Fedora)
+      browser_enable_brave:
+        type: bool
+        required: false
+        default: true
+        description: Install Brave via its HTTPS apt repository (Debian only)
+      browser_brave_keyring_path:
+        type: str
+        required: false
+        default: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+        description: Path to the Brave GPG keyring
+      browser_brave_repo_url:
+        type: str
+        required: false
+        default: https://brave-browser-apt-release.s3.brave.com/
+        description: Base URL for the Brave APT repository and key
+      browser_brave_apt_filename:
+        type: str
+        required: false
+        default: brave-browser
+        description: Filename for the Brave APT source list
+      browser_brave_packages:
+        type: list
+        required: false
+        default:
+          - ca-certificates
+          - curl
+          - gnupg
+          - apt-transport-https
+        description: Packages required to install Brave (prereqs, Debian only)

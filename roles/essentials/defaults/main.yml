@@ -1,5 +1,8 @@
 ---
 
+# Feature toggles — naming pattern: essentials_enable_<feature>
+essentials_enable_gnome: true
+
 essentials_packages_base:
   - galculator
   - arandr
@@ -23,6 +26,14 @@ essentials_packages_sound:
 essentials_packages_xdg:
   - xdg-utils
   - xdg-user-dirs
+
+essentials_packages_gnome:
+  - gnome-system-monitor
+  - network-manager-gnome
+  - gnome-screenshot
+  - gnome-extra-icons
+  - gedit
+  - gedit-plugins
 
 essentials_dotfiles_gtk:
   - .gtkrc-2.0

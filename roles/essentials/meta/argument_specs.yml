@@ -1,6 +1,6 @@
 argument_specs:
   main:
-    short_description: Install desktop essentials and per-user GTK/gedit/dconf dotfiles
+    short_description: Install desktop essentials + GNOME tools and per-user GTK/gedit/dconf dotfiles
     options:
       essentials_packages_base:
         type: list
@@ -35,6 +35,22 @@ argument_specs:
         - xdg-utils
         - xdg-user-dirs
         description: XDG utilities packages
+      essentials_enable_gnome:
+        type: bool
+        required: false
+        default: true
+        description: Install GNOME tools packages (absorbed from odem.desktop.gnometools)
+      essentials_packages_gnome:
+        type: list
+        required: false
+        default:
+        - gnome-system-monitor
+        - network-manager-gnome
+        - gnome-screenshot
+        - gnome-extra-icons
+        - gedit
+        - gedit-plugins
+        description: GNOME tools packages (the gedit config is deployed per-user by this role)
       essentials_dotfiles_gtk:
         type: list
         required: false

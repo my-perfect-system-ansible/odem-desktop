@@ -41,6 +41,24 @@
   changed_when: "'Nothing to do' not in dnf_install_essentials_xdg.stdout"
   become: true
 
+- name: Install GNOME tools packages (Debian)
+  ansible.builtin.package:
+    name: "{{ essentials_packages_gnome }}"
+    state: present
+  become: true
+  when:
+    - ansible_facts['os_family'] == 'Debian'
+    - essentials_enable_gnome | bool
+
+- name: Install GNOME tools packages (RedHat via dnf CLI)
+  ansible.builtin.command: dnf install -y gnome-system-monitor network-manager-applet gedit gedit-plugins
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - essentials_enable_gnome | bool
+  register: dnf_install_essentials_gnome
+  changed_when: "'Nothing to do' not in dnf_install_essentials_gnome.stdout"
+  become: true
+
 - name: Ensure images target dir exists
   ansible.builtin.file:
     path: "{{ essentials_bootsplash_dst | dirname }}"

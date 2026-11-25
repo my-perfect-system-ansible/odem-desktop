@@ -1,7 +1,0 @@
----
-plymouth_packages:
-  - plymouth
-  - plymouth-themes
-
-plymouth_themes_dir: /usr/share/plymouth/themes
-plymouth_default_theme: anon

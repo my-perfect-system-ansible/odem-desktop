@@ -1,3 +1,0 @@
----
-- name: Install Brave browser
-  ansible.builtin.include_tasks: install.yml

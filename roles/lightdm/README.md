@@ -6,19 +6,28 @@ role: lightdm
 
 # `odem.desktop.lightdm`
 
-Configure lightdm-gtk-greeter background
+Install X11 + WM packages, configure the lightdm greeter and per-user WM dotfiles
+
+Merges the former `odem.desktop.x11` (X11 server + build deps) and
+`odem.desktop.wm` (WM support packages + per-user picom/dunst dotfiles)
+roles into the lightdm greeter role. Per-user parts are gated by the
+`desktop_lightdm` user-role key (formerly `desktop_wm`).
 
 ## Default variables
 
 | Variable | Default | Description |
 |---|---|---|
+| `lightdm_enable_wm` | `true` | Install window manager support packages and deploy the per-user picom/dunst dotfiles (former odem.desktop.wm) |
+| `lightdm_enable_x11` | `true` | Install the X11 server + build dependency packages (former odem.desktop.x11) |
 | `lightdm_greeter_conf` | `/etc/lightdm/lightdm-gtk-greeter.conf` | Path to the lightdm gtk greeter config file |
+| `lightdm_packages_wm` | `[22 items]` | Window manager support packages (Debian defaults) |
+| `lightdm_packages_x11` | `[11 items]` | X11 server + build dependency packages (Debian defaults) |
 | `lightdm_wallpaper` | `wormhole.jpg` | Wallpaper filename (must be in lightdm_wallpapers_dir) |
 | `lightdm_wallpapers_dir` | `/usr/share/images/desktop/wallpaper` | Directory containing wallpaper images (odem.desktop.essentials deploys this) |
 
 ## Dependencies
 
-None.
+- `odem.os.user`
 
 ## Example usage
 
@@ -32,8 +41,8 @@ None.
 
 - **Min Ansible version**: `2.16.0`
 - **License**: GPL-3.0-or-later
-- **Platforms**: Debian (trixie)
-- **Tasks file lines**: 3
+- **Platforms**: Debian (trixie), Fedora (45)
+- **Tasks file lines**: 8
 
 ## Related files
 

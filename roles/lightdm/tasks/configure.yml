@@ -1,0 +1,35 @@
+---
+- name: Copy per-user picom config
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/dotfiles/.config/picom.conf"
+    dest: "{{ entity.home }}/.config/picom.conf"
+    owner: "{{ entity.name }}"
+    group: "{{ entity.group | default(entity.name) }}"
+    mode: "0600"
+  loop: "{{ user_resolved }}"
+  loop_control:
+    loop_var: entity
+    label: "{{ entity.name }}"
+  when:
+    - lightdm_enable_wm | bool
+    - entity.user_roles.desktop_lightdm | default(false)
+    - entity.state == 'present'
+  become: true
+
+- name: Copy per-user dunst config
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/dotfiles/.config/dunst/"
+    dest: "{{ entity.home }}/.config/dunst/"
+    owner: "{{ entity.name }}"
+    group: "{{ entity.group | default(entity.name) }}"
+    mode: "0644"
+    directory_mode: "0700"
+  loop: "{{ user_resolved }}"
+  loop_control:
+    loop_var: entity
+    label: "{{ entity.name }}"
+  when:
+    - lightdm_enable_wm | bool
+    - entity.user_roles.desktop_lightdm | default(false)
+    - entity.state == 'present'
+  become: true

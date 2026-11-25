@@ -1,15 +1,15 @@
 # AGENTS.md — odem-desktop
 
-Desktop GUI and window manager environment — x11, qtile window manager,
-rofi / thunar / essentials helpers, kanata keyboard remapper, firefox /
-thunderbird / brave / spotify browsers, lightdm greeter, plymouth boot
-theme, gnome-tools.
+Desktop GUI and window manager environment — qtile window manager, rofi /
+thunar / trayhub helpers, kanata keyboard remapper, lightdm greeter +
+X11 / window manager stacks, browser (firefox + brave), thunderbird,
+spotify, grubmenu themes, per-user essentials incl. GNOME tools.
 
 ## Galaxy
 
 - **namespace**: `odem`
 - **name**: `desktop`
-- **version**: `0.3.1`
+- **version**: `0.5.0`
 - **dependencies**: `odem.os >=0.1.0`, `ansible.posix >=1.0.0`
 
 ## Roles
@@ -18,26 +18,21 @@ theme, gnome-tools.
 
 | Role | Description | Complexity |
 |---|---|---|
-| `odem.desktop.firefox` | Firefox apt install. | 1 |
+| `odem.desktop.browser` | Firefox and Brave browsers (own toggle each). | 1 |
 | `odem.desktop.thunderbird` | Thunderbird apt install. | 1 |
-| `odem.desktop.brave` | Brave browser (custom apt repo + signing key). | 1 |
 | `odem.desktop.spotify` | Spotify client (custom apt repo + signing key). | 1 |
-| `odem.desktop.lightdm` | LightDM greeter config + wallpaper directory. | 1 |
-| `odem.desktop.plymouth` | Plymouth boot theme + `.plymouth` file modification. | 1 |
 | `odem.desktop.grubmenu` | GRUB theme + `/etc/default/grub` lineinfile + `update-grub`. | 1 |
-| `odem.desktop.gnometools` | GNOME tool packages (single install list). | 1 |
-| `odem.desktop.x11` | X11 base packages. | 1 |
 
 ### Window manager + helpers (per-user)
 
 | Role | Description | Complexity |
 |---|---|---|
-| `odem.desktop.qtile` | 21 jinja2 templates (some with loops), heavy `set_fact` chains for per-user config paths, pip venv + git clone. **Most complex desktop role.** | 3 |
+| `odem.desktop.qtile` | Plain-file config repo clone (mps-desktop-qtile) + upstream qtile venv + system scripts. | 3 |
 | `odem.desktop.kanata` | Per-user rustup / cargo install, udev rules, systemd user service, `enable-linger` loop. | 3 |
-| `odem.desktop.essentials` | Per-user dotfile copy loops + per-user `set_fact` builders. | 2 |
-| `odem.desktop.rofi` | Per-user dotfile + script copy loops + `set_fact` builders. | 2 |
-| `odem.desktop.thunar` | Per-user dotfile copy loop + `set_fact`. | 2 |
-| `odem.desktop.wm` | Per-user copy loops with `item.src` gating + `set_fact`. | 2 |
+| `odem.desktop.essentials` | Per-user dotfile copy loops + `set_fact` builders + GNOME tools packages. | 2 |
+| `odem.desktop.rofi` | Per-user dotfile + script copy loops (`product()` pairs). | 2 |
+| `odem.desktop.thunar` | Per-user dotfile copy loop. | 2 |
+| `odem.desktop.lightdm` | X11 + WM packages, greeter config, per-user picom/dunst dotfiles (former x11 + wm roles). | 2 |
 
 ## Conventions
 

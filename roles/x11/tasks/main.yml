@@ -1,3 +1,0 @@
----
-- name: Install X11 packages
-  ansible.builtin.include_tasks: install.yml

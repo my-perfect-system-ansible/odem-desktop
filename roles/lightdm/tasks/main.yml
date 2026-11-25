@@ -1,3 +1,6 @@
 ---
-- name: Install LightDM wallpaper and configure greeter
+- name: Install X11, window manager and lightdm packages
   ansible.builtin.include_tasks: install.yml
+
+- name: Configure per-user window manager dotfiles
+  ansible.builtin.include_tasks: configure.yml

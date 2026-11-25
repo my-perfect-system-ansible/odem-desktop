@@ -1,0 +1,18 @@
+---
+
+# Feature toggles — naming pattern: browser_enable_<feature>
+browser_enable_firefox: true
+browser_enable_brave: true
+
+# Regular configuration
+
+# Brave HTTPS apt repo (Debian only — no RedHat path: brave tasks are skipped
+# on Fedora, firefox uses the distro package there).
+browser_brave_keyring_path: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+browser_brave_repo_url: https://brave-browser-apt-release.s3.brave.com/
+browser_brave_apt_filename: brave-browser
+browser_brave_packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - apt-transport-https
