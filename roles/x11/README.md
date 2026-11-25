@@ -16,7 +16,7 @@ Install X11 server, mesa, and qtile build dependencies
 
 ## Dependencies
 
-- `odem.users.user`
+- `odem.os.user`
 
 ## Example usage
 

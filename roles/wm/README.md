@@ -17,7 +17,7 @@ Install window manager deps and per-user dotfiles
 
 ## Dependencies
 
-- `odem.users.user`
+- `odem.os.user`
 
 ## Example usage
 

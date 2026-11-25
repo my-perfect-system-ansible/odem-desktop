@@ -35,7 +35,7 @@ Install qtile + per-user templated Python config
 
 ## Dependencies
 
-- `odem.users.user`
+- `odem.os.user`
 
 ## Example usage
 

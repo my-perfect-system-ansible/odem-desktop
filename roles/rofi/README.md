@@ -20,7 +20,7 @@ Install rofi launcher + per-user config and 8 boot scripts
 
 ## Dependencies
 
-- `odem.users.user`
+- `odem.os.user`
 
 ## Example usage
 
