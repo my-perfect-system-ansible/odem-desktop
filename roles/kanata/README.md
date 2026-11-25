@@ -24,7 +24,7 @@ Install kanata keyboard remapper + per-user systemd service
 
 ## Dependencies
 
-- `odem.base.identity`
+- `odem.users.user`
 
 ## Example usage
 

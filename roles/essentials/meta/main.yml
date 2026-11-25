@@ -19,4 +19,4 @@ galaxy_info:
     - essentials
     - odem-desktop
 dependencies:
-  - role: odem.base.identity
+  - role: odem.users.user

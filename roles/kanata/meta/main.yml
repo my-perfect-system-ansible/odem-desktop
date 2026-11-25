@@ -20,4 +20,4 @@ galaxy_info:
     - keyboard
     - odem-desktop
 dependencies:
-  - role: odem.base.identity
+  - role: odem.users.user

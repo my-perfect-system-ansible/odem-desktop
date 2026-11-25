@@ -19,7 +19,7 @@
       - input
       - uinput
     append: true
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -81,7 +81,7 @@
   ansible.builtin.command:
     cmd: sudo -u {{ entity.name }} /bin/bash -c '/usr/share/mps/tools/rustup/rustup.sh -y --default-toolchain stable'
     creates: "{{ entity.home }}/.cargo/bin/cargo"
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -97,7 +97,7 @@
     group: "{{ entity.group | default(entity.name) }}"
     mode: "0700"
     recurse: true
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -109,7 +109,7 @@
   ansible.builtin.command:
     cmd: sudo -u {{ entity.name }} /bin/bash -c 'PATH="{{ entity.home }}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" {{ entity.home }}/.cargo/bin/cargo install kanata --features {{ kanata_cargo_features }} --force'
     creates: "{{ entity.home }}/.cargo/bin/kanata"
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -124,7 +124,7 @@
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
     mode: "0600"
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -144,7 +144,7 @@
   ansible.builtin.command:
     cmd: loginctl enable-linger {{ entity.name }}
   changed_when: true
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"

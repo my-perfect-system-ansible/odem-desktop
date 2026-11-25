@@ -41,7 +41,7 @@
         'widget_pollfile.py.j2',
         'widget_polltext.py.j2',
       ] -%}
-      {%- for entity in identity_users_resolved if entity.state == 'present' and entity.user_roles.desktop_qtile | default(false) -%}
+      {%- for entity in user_resolved if entity.state == 'present' and entity.user_roles.desktop_qtile | default(false) -%}
       {%-   for t in templates -%}
       {%-     set _ = items.append({'entity': entity, 'src': 'dotfiles/.config/qtile/' ~ t}) -%}
       {%-   endfor -%}
@@ -52,7 +52,7 @@
   ansible.builtin.set_fact:
     qtile_user_script_items: >-
       {%- set items = [] -%}
-      {%- for entity in identity_users_resolved if entity.state == 'present' and entity.user_roles.desktop_qtile | default(false) -%}
+      {%- for entity in user_resolved if entity.state == 'present' and entity.user_roles.desktop_qtile | default(false) -%}
       {%-   for s in qtile_user_scripts -%}
       {%-     set _ = items.append({'entity': entity, 'src': s}) -%}
       {%-   endfor -%}

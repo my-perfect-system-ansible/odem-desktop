@@ -18,7 +18,7 @@ Install thunar + plugins and per-user dotfiles
 
 ## Dependencies
 
-- `odem.base.identity`
+- `odem.users.user`
 
 ## Example usage
 

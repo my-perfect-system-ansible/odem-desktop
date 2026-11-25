@@ -10,7 +10,7 @@ theme, gnome-tools.
 - **namespace**: `odem`
 - **name**: `desktop`
 - **version**: `0.3.1`
-- **dependencies**: `odem.base`, `ansible.posix`
+- **dependencies**: `odem.users`, `ansible.posix`
 
 See [`galaxy.yml`](galaxy.yml) for the canonical values.
 
@@ -53,13 +53,13 @@ ansible-galaxy collection install odem.desktop
 - hosts: desktops
   become: true
   vars:
-    users_catalog:
+    user_catalog:
       alice:
         user_roles:
           desktop_qtile: true
           desktop_kanata: true
   roles:
-    - odem.base.identity
+    - odem.users.user
     - odem.desktop.x11
     - odem.desktop.qtile
 ```

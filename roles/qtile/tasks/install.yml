@@ -17,7 +17,7 @@
   ansible.builtin.command:
     cmd: sudo -u {{ entity.name }} python3 -m venv "{{ entity.home }}/.venvs/qtile"
     creates: "{{ entity.home }}/.venvs/qtile"
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -29,7 +29,7 @@
   ansible.builtin.command:
     cmd: sudo -u {{ entity.name }} git clone --single-branch --branch "{{ qtile_repo_version }}" "{{ qtile_repo_url }}" "{{ qtile_repo_dest | regex_replace('^~', entity.home) }}"
     creates: "{{ qtile_repo_dest | regex_replace('^~', entity.home) }}"
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -41,7 +41,7 @@
   ansible.builtin.command:
     cmd: sudo -u {{ entity.name }} "{{ entity.home }}/.venvs/qtile/bin/pip" install "{{ qtile_repo_dest | regex_replace('^~', entity.home) }}"
     creates: "{{ entity.home }}/.venvs/qtile/bin/qtile"
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -52,7 +52,7 @@
 - name: Install psutil into qtile venv per user
   ansible.builtin.command:
     cmd: sudo -u {{ entity.name }} "{{ entity.home }}/.venvs/qtile/bin/pip" install psutil
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"
@@ -68,7 +68,7 @@
     group: "{{ entity.group | default(entity.name) }}"
     mode: "0700"
     recurse: true
-  loop: "{{ identity_users_resolved }}"
+  loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity
     label: "{{ entity.name }}"

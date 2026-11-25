@@ -25,7 +25,7 @@ Install desktop essentials and per-user GTK/gedit/dconf dotfiles
 
 ## Dependencies
 
-- `odem.base.identity`
+- `odem.users.user`
 
 ## Example usage
 
