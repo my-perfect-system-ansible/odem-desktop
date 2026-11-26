@@ -16,7 +16,7 @@ argument_specs:
       rofi_repo_dest:
         type: str
         required: false
-        default: "{{ user_default_repo_dir_mps }}/mps-desktop-rofi"
+        default: /srv/repo/github/my-perfect-system/mps/mps-desktop-rofi
         description: Destination path for the mps-desktop-rofi clone
       rofi_repo_version:
         type: str

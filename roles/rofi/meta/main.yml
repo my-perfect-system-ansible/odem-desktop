@@ -19,4 +19,4 @@ galaxy_info:
     - rofi
     - odem-desktop
 dependencies:
-  - role: odem.os.user
+  []

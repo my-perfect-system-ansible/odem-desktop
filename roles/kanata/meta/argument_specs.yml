@@ -10,7 +10,7 @@ argument_specs:
       kanata_repo_dest:
         type: str
         required: false
-        default: "{{ user_default_repo_dir_mps }}/mps-desktop-kanata"
+        default: /srv/repo/github/my-perfect-system/mps/mps-desktop-kanata
         description: Destination path for the mps-desktop-kanata repository clone
       kanata_repo_version:
         type: str

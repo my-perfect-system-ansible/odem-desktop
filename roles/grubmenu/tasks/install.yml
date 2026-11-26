@@ -81,14 +81,11 @@
   become: true
   when: ansible_facts['os_family'] == 'Debian'
 
-- name: Check for UEFI GRUB config path (RedHat)
-  ansible.builtin.stat:
-    path: /boot/efi/EFI/fedora/grub.cfg
-  register: grub_uefi_path
-  when: ansible_facts['os_family'] == 'RedHat'
-
 - name: Regenerate GRUB configuration (RedHat)
-  ansible.builtin.command: "grub2-mkconfig -o {{ grub_uefi_path.stat.exists | ternary('/boot/efi/EFI/fedora/grub.cfg', '/boot/grub2/grub.cfg') }}"
+  # Fedora >= 34 keeps a wrapper stub on the ESP (/boot/efi/EFI/fedora/grub.cfg)
+  # that only loads the real config — grub2-mkconfig refuses to overwrite it.
+  # The real config always lives at /boot/grub2/grub.cfg (BIOS and UEFI).
+  ansible.builtin.command: grub2-mkconfig -o /boot/grub2/grub.cfg
   changed_when: true
   become: true
   when: ansible_facts['os_family'] == 'RedHat'

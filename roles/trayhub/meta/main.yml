@@ -21,4 +21,4 @@ galaxy_info:
     - trayhub
     - odem-desktop
 dependencies:
-  - role: odem.os.user
+  []

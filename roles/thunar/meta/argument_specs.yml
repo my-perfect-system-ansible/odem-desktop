@@ -29,7 +29,7 @@ argument_specs:
       thunar_repo_dest:
         type: str
         required: false
-        default: "{{ user_default_repo_dir_mps }}/mps-desktop-thunar"
+        default: /srv/repo/github/my-perfect-system/mps/mps-desktop-thunar
         description: Destination path for the cloned mps-desktop-thunar repository
       thunar_repo_version:
         type: str

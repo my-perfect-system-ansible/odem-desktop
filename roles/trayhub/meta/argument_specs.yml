@@ -21,7 +21,7 @@ argument_specs:
       trayhub_repo_dest:
         type: str
         required: false
-        default: "{{ user_default_repo_dir_mps }}/mps-desktop-trayhub"
+        default: /srv/repo/github/my-perfect-system/mps/mps-desktop-trayhub
         description: Clone destination of our trayhub app repo (see defaults/main.yml)
       trayhub_repo_version:
         type: str

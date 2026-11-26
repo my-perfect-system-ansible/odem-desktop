@@ -77,6 +77,7 @@
   ansible.builtin.copy:
     src: "{{ rofi_repo_dest }}/config/rofi/themes/{{ item }}"
     dest: "{{ rofi_themes_dir }}/{{ item }}"
+    remote_src: true
     owner: root
     group: root
     mode: "0644"

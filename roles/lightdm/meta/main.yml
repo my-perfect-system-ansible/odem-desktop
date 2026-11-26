@@ -23,4 +23,4 @@ galaxy_info:
     - dunst
     - odem-desktop
 dependencies:
-  - role: odem.os.user
+  []

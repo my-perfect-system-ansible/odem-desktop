@@ -20,4 +20,4 @@ galaxy_info:
     - filemanager
     - odem-desktop
 dependencies:
-  - role: odem.os.user
+  []
