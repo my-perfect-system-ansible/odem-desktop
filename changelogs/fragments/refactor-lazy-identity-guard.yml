@@ -1,0 +1,27 @@
+---
+# Fragment for the lazy identity guard refactor (2026-11-26).
+# Compiles into changelogs/changelog.yaml at release time.
+removed_features:
+  - |
+    All 7 roles (`essentials`, `kanata`, `lightdm`, `qtile`, `rofi`, `thunar`,
+    `trayhub`) no longer meta-depend on `odem.os.user`. Each resolves the
+    identity facts lazily via a first-task `include_role {name: odem.os.user,
+    tasks_from: identity.yml, public: true}` guard instead; account management
+    only runs where `odem.os.user` is applied explicitly (e.g. the bootstrap
+    playbook). Standalone role application no longer creates or touches user
+    accounts.
+bugfixes:
+  - |
+    `rofi` theme deploy and `qtile` xsession file copy from the mps-desktop-*
+    clones on the target with `remote_src: true`.
+  - |
+    `grubmenu` regenerates the GRUB configuration on RedHat with
+    `grub2-mkconfig -o /boot/grub2/grub.cfg` unconditionally — Fedora >= 34
+    keeps a wrapper stub on the ESP (`/boot/efi/EFI/fedora/grub.cfg`) that
+    `grub2-mkconfig` refuses to overwrite; the real config lives at
+    /boot/grub2/grub.cfg on both BIOS and UEFI installs.
+  - |
+    Argument-spec validation renders role defaults before any task, so spec
+    `default:` fields are now literals and the 5 consuming roles mirror the
+    canonical `user_default_repo_dir_mps` value in their own `defaults/main.yml`
+    (inventory overrides still win; task-time values are unchanged).
