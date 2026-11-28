@@ -57,3 +57,18 @@ argument_specs:
         default:
         - udev
         description: Packages required for kanata (uinput group, udev rules; Debian only, systemd provides udev on RedHat)
+      kanata_enable_udev_reload:
+        type: bool
+        required: false
+        default: true
+        description: "Reload + trigger udev rules after deploying the udev rule"
+      kanata_enable_kernel_module:
+        type: bool
+        required: false
+        default: true
+        description: "Load the uinput kernel module via modprobe"
+      kanata_enable_service:
+        type: bool
+        required: false
+        default: true
+        description: "Enable lingering + the per-user kanata systemd service"

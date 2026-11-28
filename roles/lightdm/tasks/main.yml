@@ -9,5 +9,9 @@
 - name: Install X11, window manager and lightdm packages
   ansible.builtin.include_tasks: install.yml
 
+- name: Configure lightdm autologin
+  ansible.builtin.include_tasks: autologin.yml
+  when: lightdm_enable_autologin | bool
+
 - name: Configure per-user window manager dotfiles
   ansible.builtin.include_tasks: configure.yml

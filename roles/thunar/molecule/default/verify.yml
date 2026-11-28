@@ -1,12 +1,22 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.thunar: the package and per-user
+# Thunar/xfce4 config exist.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.thunar passed (converge ran without error)."
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: thunar package is present
+      ansible.builtin.assert:
+        that: ansible_facts.packages['thunar'] is defined
+        msg: thunar package missing
+
+    - name: Per-user Thunar config exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.config/Thunar
+      register: thunar_config
+      failed_when: not thunar_config.stat.exists

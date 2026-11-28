@@ -1,0 +1,8 @@
+---
+- name: Restart lightdm
+  ansible.builtin.systemd:
+    name: lightdm
+    state: restarted
+  when:
+    - lightdm_enable_service | bool
+    - ansible_service_mgr == 'systemd'

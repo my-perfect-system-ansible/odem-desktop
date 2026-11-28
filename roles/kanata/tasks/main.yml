@@ -71,6 +71,12 @@
     owner: root
     group: "{{ user_default_admin_group }}"
     recurse: yes
+  become: true
+
+- name: Set setgid bit on mps-desktop-kanata
+  ansible.builtin.file:
+    path: "{{ kanata_repo_dest }}"
+    state: directory
     mode: "2775"
   become: true
 
@@ -108,16 +114,19 @@
   ansible.builtin.command: udevadm control --reload-rules
   changed_when: true
   become: true
+  when: kanata_enable_udev_reload
 
 - name: Trigger udev rules
   ansible.builtin.command: udevadm trigger
   changed_when: true
   become: true
+  when: kanata_enable_udev_reload
 
 - name: Load uinput kernel module
   ansible.builtin.command: modprobe uinput
   changed_when: true
   become: true
+  when: kanata_enable_kernel_module
 
 - name: Ensure rustup tools directory exists
   ansible.builtin.file:
@@ -210,6 +219,7 @@
   when:
     - entity.user_roles.desktop_kanata | default(false)
     - entity.state == 'present'
+    - kanata_enable_service
 
 - name: Deploy kanata systemd user service
   ansible.builtin.copy:
@@ -234,3 +244,4 @@
 - name: Enable kanata service globally
   ansible.builtin.command: systemctl --global enable kanata.service
   changed_when: true
+  when: kanata_enable_service

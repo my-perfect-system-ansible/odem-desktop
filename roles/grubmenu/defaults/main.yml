@@ -1,4 +1,9 @@
 ---
+# Feature toggles — naming pattern: grubmenu_enable_<feature>
+
+# Regenerate the GRUB configuration (update-grub / grub2-mkconfig). Disable
+# where /boot is not a real boot mount (containers, chroots).
+grubmenu_enable_regenerate: true
 grubmenu_themes_dir: /boot/grub/themes
 grubmenu_icons_dir: /boot/grub/icons
 

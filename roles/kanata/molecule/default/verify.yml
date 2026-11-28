@@ -1,12 +1,31 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.kanata: udev rule, modules-load entry,
+# systemd user unit and per-user config are deployed.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.kanata passed (converge ran without error)."
+    - name: udev uinput rule exists
+      ansible.builtin.stat:
+        path: /etc/udev/rules.d/99-kanata-uinput.rules
+      register: kanata_udev_rule
+      failed_when: not kanata_udev_rule.stat.exists
+
+    - name: modules-load uinput entry exists
+      ansible.builtin.stat:
+        path: /etc/modules-load.d/uinput.conf
+      register: kanata_modules_load
+      failed_when: not kanata_modules_load.stat.exists
+
+    - name: systemd user service exists
+      ansible.builtin.stat:
+        path: /etc/systemd/user/kanata.service
+      register: kanata_service
+      failed_when: not kanata_service.stat.exists
+
+    - name: Per-user kanata config exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.config/kanata/kanata.kbd
+      register: kanata_config
+      failed_when: not kanata_config.stat.exists

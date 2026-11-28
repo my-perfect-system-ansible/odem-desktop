@@ -36,7 +36,10 @@
     remote_src: true
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
-    mode: "0644"
+    # No mode here: with remote_src + directory src, copy applies mode to
+    # the destination dir itself (0644 -> drw-r--r--, unstat-able by its
+    # owner). The dir is pre-created at 0700 above; directory_mode covers
+    # subdirs. Same fix as odem.terminal.nvim (see AGENTS.md).
     directory_mode: "0700"
   loop: "{{ user_resolved }}"
   loop_control:

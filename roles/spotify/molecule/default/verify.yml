@@ -1,12 +1,24 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.spotify: the role is Debian-only
+# (apt repo + package); assertions run on Debian hosts.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.spotify passed (converge ran without error)."
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Spotify keyring exists (Debian)
+      ansible.builtin.stat:
+        path: /etc/apt/trusted.gpg.d/spotify.gpg
+      register: spotify_keyring
+      failed_when: not spotify_keyring.stat.exists
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: spotify-client package is present (Debian)
+      ansible.builtin.assert:
+        that: ansible_facts.packages['spotify-client'] is defined
+        msg: spotify-client package missing
+      when: ansible_facts['os_family'] == 'Debian'

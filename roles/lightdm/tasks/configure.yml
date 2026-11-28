@@ -1,4 +1,24 @@
 ---
+- name: Ensure per-user .config directory exists
+  # copy requires the dest parent to exist — useradd -m creates the home
+  # skeleton only; ~/.config appears once a desktop app runs. Mirror the
+  # odem.terminal.nvim / odem.desktop.qtile pre-create pattern.
+  ansible.builtin.file:
+    path: "{{ entity.home }}/.config"
+    state: directory
+    owner: "{{ entity.name }}"
+    group: "{{ entity.group | default(entity.name) }}"
+    mode: "0700"
+  loop: "{{ user_resolved }}"
+  loop_control:
+    loop_var: entity
+    label: "{{ entity.name }}"
+  when:
+    - lightdm_enable_wm | bool
+    - entity.user_roles.desktop_lightdm | default(false)
+    - entity.state == 'present'
+  become: true
+
 - name: Copy per-user picom config
   ansible.builtin.copy:
     src: "{{ role_path }}/files/dotfiles/.config/picom.conf"

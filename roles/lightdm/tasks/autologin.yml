@@ -1,0 +1,65 @@
+---
+# Passwordless graphical autologin — group-gated PAM file (RedHat only:
+# Debian's lightdm package ships its own) + a seat dropin. NOTE: the
+# autologin-* options MUST sit in [Seat:*]; lightdm silently ignores them
+# in [LightDM] (logs "contains unknown option", verified Fedora 45).
+
+- name: Resolve autologin user when unset
+  ansible.builtin.set_fact:
+    lightdm_autologin_user_resolved: >-
+      {%- set _autologin = [] -%}
+      {%- for _u in user_present -%}
+      {%-   if _u.user_roles.desktop_lightdm | default(false) -%}
+      {{      _autologin.append(_u.name) | default('', true) }}
+      {%-   endif -%}
+      {%- endfor -%}
+      {{- lightdm_autologin_user
+           if (lightdm_autologin_user | default('') | length > 0)
+           else (_autologin | first | default('')) -}}
+  # NOTE: no vars: intermediate here — a set_fact var holding a list renders
+  # to its string repr ("['jb']"), and `| first` on that string returns a
+  # single character. Build the list inside the template instead.
+- name: Configure lightdm autologin
+  when: lightdm_autologin_user_resolved | length > 0
+  become: true
+  block:
+    - name: Ensure autologin group exists
+      ansible.builtin.group:
+        name: "{{ lightdm_autologin_group }}"
+        system: true
+
+    - name: Add autologin user to autologin group
+      ansible.builtin.user:
+        name: "{{ lightdm_autologin_user_resolved }}"
+        groups: "{{ lightdm_autologin_group }}"
+        append: true
+
+    - name: Deploy lightdm autologin PAM file
+      ansible.builtin.template:
+        src: etc/pam.d/lightdm-autologin.j2
+        dest: "{{ lightdm_autologin_pam }}"
+        owner: root
+        group: root
+        mode: "0644"
+      # Fedora ships no autologin PAM with lightdm — without this file the
+      # autologin session prompts for a password and then fails. Debian's
+      # package ships its own; do not clobber it.
+      when: ansible_facts['os_family'] == 'RedHat'
+      notify: Restart lightdm
+
+    - name: Ensure lightdm dropin directory exists
+      ansible.builtin.file:
+        path: "{{ lightdm_confd_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy lightdm autologin dropin
+      ansible.builtin.template:
+        src: autologin.conf.j2
+        dest: "{{ lightdm_confd_dir }}/{{ lightdm_autologin_dropin }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart lightdm

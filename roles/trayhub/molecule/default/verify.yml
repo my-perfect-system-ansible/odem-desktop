@@ -1,12 +1,19 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.trayhub: the mps-desktop-trayhub repo
+# is cloned to the repo dir and the per-user install tree exists.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.trayhub passed (converge ran without error)."
+    - name: mps-desktop-trayhub repo is cloned
+      ansible.builtin.stat:
+        path: /srv/repo/github/my-perfect-system/mps/mps-desktop-trayhub
+      register: trayhub_repo
+      failed_when: not trayhub_repo.stat.exists
+
+    - name: Per-user trayhub install tree exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.local/share/mps-trayhub
+      register: trayhub_install
+      failed_when: not trayhub_install.stat.exists

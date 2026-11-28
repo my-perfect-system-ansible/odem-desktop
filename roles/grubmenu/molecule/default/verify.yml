@@ -1,12 +1,25 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.grubmenu: the default theme is deployed
+# into the family-specific GRUB themes directory.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.grubmenu passed (converge ran without error)."
+    - name: Theme directory exists (Debian)
+      ansible.builtin.stat:
+        path: /boot/grub/themes/anon
+      register: grub_theme_debian
+      failed_when: not grub_theme_debian.stat.exists
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Theme directory exists (RedHat)
+      ansible.builtin.stat:
+        path: /boot/grub2/themes/anon
+      register: grub_theme_redhat
+      failed_when: not grub_theme_redhat.stat.exists
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: GRUB_THEME is configured in /etc/default/grub
+      ansible.builtin.command: grep -q 'GRUB_THEME=' /etc/default/grub
+      changed_when: false

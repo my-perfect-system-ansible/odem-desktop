@@ -3,6 +3,8 @@
 # Feature toggles — naming pattern: lightdm_enable_<feature>
 lightdm_enable_x11: true
 lightdm_enable_wm: true
+lightdm_enable_service: true
+lightdm_enable_autologin: true
 
 # Regular configuration
 
@@ -10,6 +12,16 @@ lightdm_enable_wm: true
 lightdm_wallpaper: wormhole.jpg
 lightdm_wallpapers_dir: /usr/share/images/desktop/wallpaper
 lightdm_greeter_conf: /etc/lightdm/lightdm-gtk-greeter.conf
+
+# Autologin — passwordless graphical login into the configured session.
+# lightdm_autologin_user defaults to the first present user opted into
+# user_roles.desktop_lightdm; set it to pin a specific account.
+lightdm_autologin_user: ""
+lightdm_autologin_session: qtile
+lightdm_autologin_group: autologin
+lightdm_autologin_pam: /etc/pam.d/lightdm-autologin
+lightdm_confd_dir: /etc/lightdm/lightdm.conf.d
+lightdm_autologin_dropin: 99-mps-autologin.conf
 
 # X11 server + build dependencies (absorbed from the former odem.desktop.x11).
 lightdm_packages_x11:

@@ -17,8 +17,14 @@ roles into the lightdm greeter role. Per-user parts are gated by the
 
 | Variable | Default | Description |
 |---|---|---|
-| `lightdm_enable_wm` | `true` | Install window manager support packages and deploy the per-user picom/dunst dotfiles (former odem.desktop.wm) |
-| `lightdm_enable_x11` | `true` | Install the X11 server + build dependency packages (former odem.desktop.x11) |
+| `lightdm_enable_service` | `true` | Enable + start the lightdm systemd service (Fedora ships no preset) and set `graphical.target` as the default boot target (molecule sets false — containers have no systemd) |
+| `lightdm_enable_autologin` | `true` | Configure passwordless graphical autologin (group + PAM file + seat dropin) |
+| `lightdm_autologin_user` | `""` | Autologin account — empty selects the first present user opted into `user_roles.desktop_lightdm` |
+| `lightdm_autologin_session` | `qtile` | Session name (Name field of an /usr/share/xsessions .desktop file) |
+| `lightdm_autologin_group` | `autologin` | Group gating passwordless autologin in the PAM file |
+| `lightdm_autologin_pam` | `/etc/pam.d/lightdm-autologin` | Autologin PAM file (deployed on RedHat; Debian's package ships its own) |
+| `lightdm_confd_dir` | `/etc/lightdm/lightdm.conf.d` | lightdm drop-in configuration directory |
+| `lightdm_autologin_dropin` | `99-mps-autologin.conf` | Name of the autologin dropin |
 | `lightdm_greeter_conf` | `/etc/lightdm/lightdm-gtk-greeter.conf` | Path to the lightdm gtk greeter config file |
 | `lightdm_packages_wm` | `[22 items]` | Window manager support packages (Debian defaults) |
 | `lightdm_packages_x11` | `[11 items]` | X11 server + build dependency packages (Debian defaults) |

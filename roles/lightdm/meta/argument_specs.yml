@@ -13,6 +13,57 @@ argument_specs:
         default: true
         description: Install window manager support packages and deploy the per-user
           picom/dunst dotfiles (former odem.desktop.wm)
+      lightdm_enable_service:
+        type: bool
+        required: false
+        default: true
+        description: Enable and start the lightdm systemd service (Fedora ships no
+          preset — the unit stays disabled after install) and set
+          graphical.target as the default boot target (only graphical.target
+          starts display-manager.service at boot — a multi-user default boots
+          to a console). Molecule scenarios set this to false (containers
+          have no systemd).
+      lightdm_enable_autologin:
+        type: bool
+        required: false
+        default: true
+        description: Configure passwordless graphical autologin (autologin group,
+          PAM file, seat dropin) for the first present user opted into
+          C(user_roles.desktop_lightdm) or C(lightdm_autologin_user).
+      lightdm_autologin_user:
+        type: str
+        required: false
+        default: ""
+        description: Autologin account — empty selects the first present user
+          opted into C(user_roles.desktop_lightdm).
+      lightdm_autologin_session:
+        type: str
+        required: false
+        default: qtile
+        description: Session name (the Name of an /usr/share/xsessions .desktop file)
+          started by autologin.
+      lightdm_autologin_group:
+        type: str
+        required: false
+        default: autologin
+        description: Group gating passwordless autologin in the PAM file
+          (C(pam_succeed_if.so user ingroup ...)).
+      lightdm_autologin_pam:
+        type: str
+        required: false
+        default: /etc/pam.d/lightdm-autologin
+        description: Path of the lightdm autologin PAM file (deployed on RedHat —
+          Debian's lightdm package ships its own).
+      lightdm_confd_dir:
+        type: str
+        required: false
+        default: /etc/lightdm/lightdm.conf.d
+        description: lightdm drop-in configuration directory.
+      lightdm_autologin_dropin:
+        type: str
+        required: false
+        default: 99-mps-autologin.conf
+        description: Name of the autologin dropin inside C(lightdm_confd_dir).
       lightdm_wallpaper:
         type: str
         required: false

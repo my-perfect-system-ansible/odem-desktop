@@ -1,12 +1,24 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.essentials: base desktop packages and
+# the wallpaper directory exist.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.essentials passed (converge ran without error)."
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Base desktop packages are present
+      ansible.builtin.assert:
+        that: >-
+          ansible_facts.packages['galculator'] is defined
+          and ansible_facts.packages['espeak'] is defined
+        msg: essentials base packages missing
+
+    - name: Wallpaper directory exists
+      ansible.builtin.stat:
+        path: /usr/share/images/desktop/wallpaper
+      register: wallpapers_dir
+      failed_when: not wallpapers_dir.stat.exists

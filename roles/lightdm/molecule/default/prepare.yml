@@ -1,0 +1,37 @@
+# Container prepare: the geerlingguy ansible images ship without git
+# (roles clone mps repos) and the Debian image without apt lists (role
+# package installs); the admin group (user_default_admin_group) and the
+# synthetic molecule_user account exist only where odem.os.user manages
+# them — per-user role tasks deploy into the account's home (entity.home,
+# owner lookups), which the lazy identity guard never creates. Idempotent.
+
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache (Debian)
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install git (Debian)
+      ansible.builtin.apt:
+        name: git
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install git via dnf CLI (RedHat)
+      ansible.builtin.command: dnf install -y git
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Ensure admin group exists (user_default_admin_group default)
+      ansible.builtin.group:
+        name: admin
+        state: present
+
+    - name: Ensure molecule_user account exists
+      ansible.builtin.user:
+        name: molecule_user
+        state: present
+        create_home: true

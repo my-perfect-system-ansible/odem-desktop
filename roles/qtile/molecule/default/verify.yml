@@ -1,12 +1,25 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.qtile: the venv, per-user config and
+# the xsession desktop file exist.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.qtile passed (converge ran without error)."
+    - name: Per-user qtile venv exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.venvs/qtile
+      register: qtile_venv
+      failed_when: not qtile_venv.stat.exists
+
+    - name: Per-user qtile config exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.config/qtile
+      register: qtile_config
+      failed_when: not qtile_config.stat.exists
+
+    - name: qtile xsession desktop file exists
+      ansible.builtin.stat:
+        path: /usr/share/xsessions/qtile.desktop
+      register: qtile_xsession
+      failed_when: not qtile_xsession.stat.exists

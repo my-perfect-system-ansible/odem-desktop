@@ -10,6 +10,13 @@ kanata_repo_url: https://github.com/my-perfect-system/mps-desktop-kanata.git
 kanata_repo_dest: "{{ user_default_repo_dir_mps }}/mps-desktop-kanata"
 kanata_repo_version: main
 
+# Feature toggles — naming pattern: kanata_enable_<feature>
+# Live activation steps (need udev + systemd on a real host). The deploys
+# (udev rule, modules-load config, service unit, configs) are ungated.
+kanata_enable_udev_reload: true
+kanata_enable_kernel_module: true
+kanata_enable_service: true
+
 kanata_cargo_features: cmd
 
 kanata_config_path: ~/.config/kanata/kanata.kbd

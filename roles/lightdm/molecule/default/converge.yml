@@ -1,15 +1,49 @@
 ---
 # Minimal converge: invoke the role with default vars + a synthetic user
-# so identity-resolved consumers see something without enabling all roles.
+# opted into exactly this role so identity-resolved consumers see something.
 
 - name: Converge
   hosts: all
   become: true
   vars:
+    # Full catalog entry (identity preserves catalog fields verbatim — no
+    # defaults): home is required by the per-user picom/dunst deploys.
     user_catalog:
       molecule_user:
-        user_roles: {}
+        name: molecule_user
+        home: /home/molecule_user
+        user_roles:
+          desktop_lightdm: true
     user_list:
       - name: molecule_user
+    # geerlingguy debian image ships main-only apt sources;
+    # xserver-xorg-video-nvidia (default lightdm_packages_wm) lives in
+    # non-free — drop it for the container.
+    lightdm_packages_wm:
+      - feh
+      - lxappearance
+      - lightdm
+      - picom
+      - xscreensaver
+      - xscreensaver-data-extra
+      - xscreensaver-gl
+      - xscreensaver-screensaver-bsod
+      - x11-utils
+      - xinit
+      - x11-xserver-utils
+      - xserver-xorg-video-amdgpu
+      - xserver-xorg-video-nouveau
+      - xserver-xorg-video-vesa
+      - xserver-xorg-video-intel
+      - mesa-va-drivers
+      - mesa-vulkan-drivers
+      - lxlock
+      - xbacklight
+      - numlockx
+      - xclip
+      - dconf-cli
+      - dconf-editor
+      - dunst
+    lightdm_enable_service: false
   roles:
     - role: odem.desktop.lightdm

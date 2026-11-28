@@ -1,12 +1,30 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.browser: Firefox is installed on both
+# platform families; Brave is Debian-only (keyring + package).
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.browser passed (converge ran without error)."
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Firefox package is present
+      ansible.builtin.assert:
+        that: >-
+          ansible_facts.packages['firefox-esr'] is defined
+          or ansible_facts.packages['firefox'] is defined
+        msg: Firefox package missing
+
+    - name: Brave keyring exists (Debian)
+      ansible.builtin.stat:
+        path: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+      register: brave_keyring
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Brave package is present (Debian)
+      ansible.builtin.assert:
+        that: ansible_facts.packages['brave-browser'] is defined
+        msg: brave-browser package missing
+      when: ansible_facts['os_family'] == 'Debian'

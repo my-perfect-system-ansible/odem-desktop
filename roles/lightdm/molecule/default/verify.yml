@@ -1,12 +1,65 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.lightdm: X11 packages and the greeter
+# config are present, plus per-user picom/dunst config.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.lightdm passed (converge ran without error)."
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: X11 utilities are present (Debian)
+      ansible.builtin.assert:
+        that: >-
+          ansible_facts.packages['xterm'] is defined
+          and ansible_facts.packages['x11-utils'] is defined
+        msg: lightdm X11 packages missing
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: X11 utilities are present (RedHat)
+      # glx-utils is the Fedora x11-utils equivalent (installed by the
+      # role's dnf x11 package list).
+      ansible.builtin.assert:
+        that: >-
+          ansible_facts.packages['xterm'] is defined
+          and ansible_facts.packages['glx-utils'] is defined
+        msg: lightdm X11 packages missing
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Greeter config exists
+      ansible.builtin.stat:
+        path: /etc/lightdm/lightdm-gtk-greeter.conf
+      register: lightdm_greeter_conf
+      failed_when: not lightdm_greeter_conf.stat.exists
+
+    - name: Autologin dropin exists
+      ansible.builtin.stat:
+        path: /etc/lightdm/lightdm.conf.d/99-mps-autologin.conf
+      register: lightdm_autologin_dropin
+      failed_when: not lightdm_autologin_dropin.stat.exists
+
+    - name: Autologin dropin configures the seat section
+      ansible.builtin.command: grep -F '[Seat:*]' /etc/lightdm/lightdm.conf.d/99-mps-autologin.conf
+      changed_when: false
+      register: lightdm_dropin_seat
+      failed_when: lightdm_dropin_seat.rc != 0
+
+    - name: Autologin user is in the autologin group
+      ansible.builtin.command: id -nG molecule_user
+      changed_when: false
+      register: lightdm_autologin_groups
+      failed_when: "'autologin' not in lightdm_autologin_groups.stdout.split()"
+
+    - name: Autologin PAM file exists
+      ansible.builtin.stat:
+        path: /etc/pam.d/lightdm-autologin
+      register: lightdm_autologin_pam
+      failed_when: not lightdm_autologin_pam.stat.exists
+
+    - name: Per-user picom config exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.config/picom.conf
+      register: lightdm_picom_conf
+      failed_when: not lightdm_picom_conf.stat.exists

@@ -1,6 +1,6 @@
 ---
 # Minimal converge: invoke the role with default vars + a synthetic user
-# so identity-resolved consumers see something without enabling all roles.
+# opted into exactly this role so identity-resolved consumers see something.
 
 - name: Converge
   hosts: all
@@ -8,8 +8,15 @@
   vars:
     user_catalog:
       molecule_user:
-        user_roles: {}
+        user_roles:
+          desktop_kanata: true
     user_list:
       - name: molecule_user
+    # Containers have no udev daemon, no loadable kernel modules, no systemd:
+    # the deploys (rule/config/service files, configs) run, the live
+    # activation steps stay off.
+    kanata_enable_udev_reload: false
+    kanata_enable_kernel_module: false
+    kanata_enable_service: false
   roles:
     - role: odem.desktop.kanata

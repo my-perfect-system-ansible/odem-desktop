@@ -1,0 +1,7 @@
+# Managed by odem.desktop.lightdm — autologin dropin.
+# The autologin-* options MUST sit in [Seat:*]; lightdm silently ignores
+# them in [LightDM] (logs "contains unknown option").
+[Seat:*]
+autologin-user={{ lightdm_autologin_user_resolved }}
+autologin-session={{ lightdm_autologin_session }}
+autologin-user-timeout=0

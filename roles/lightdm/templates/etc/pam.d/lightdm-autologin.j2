@@ -1,0 +1,7 @@
+# Managed by odem.desktop.lightdm — passwordless graphical autologin.
+# Only members of the {{ lightdm_autologin_group }} group skip the prompt.
+auth     required       pam_nologin.so
+auth     required       pam_succeed_if.so user != root quiet_success
+auth     sufficient     pam_succeed_if.so user ingroup {{ lightdm_autologin_group }}
+account  required       pam_unix.so
+session  required       pam_unix.so

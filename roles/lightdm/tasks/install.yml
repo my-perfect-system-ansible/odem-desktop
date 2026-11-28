@@ -35,6 +35,31 @@
   changed_when: "'Nothing to do' not in dnf_install_lightdm_wm.stdout"
   become: true
 
+- name: Enable and start lightdm display manager
+  ansible.builtin.systemd:
+    name: lightdm
+    enabled: true
+    state: started
+  # Fedora ships no systemd preset for lightdm — the unit stays disabled
+  # after install. Debian's package postinst already enables it.
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - lightdm_enable_service | bool
+  become: true
+
+- name: Set graphical target as default boot target
+  ansible.builtin.file:
+    src: /usr/lib/systemd/system/graphical.target
+    dest: /etc/systemd/system/default.target
+    state: link
+    force: true
+  # Enabling lightdm only wires the display-manager.service alias;
+  # graphical.target is what pulls that alias in at boot — a host left
+  # on multi-user.target (Fedora Server preset) boots to a console and
+  # only a manual `systemctl restart lightdm` brings up the greeter.
+  when: lightdm_enable_service | bool
+  become: true
+
 - name: Ensure lightdm wallpapers directory exists
   ansible.builtin.file:
     path: "{{ lightdm_wallpapers_dir }}"

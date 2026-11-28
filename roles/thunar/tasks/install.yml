@@ -35,6 +35,12 @@
     owner: "root"
     group: "{{ user_default_admin_group }}"
     recurse: yes
+  become: true
+
+- name: Set setgid bit on mps-desktop-thunar
+  ansible.builtin.file:
+    path: "{{ thunar_repo_dest }}"
+    state: directory
     mode: "2775"
   become: true
 

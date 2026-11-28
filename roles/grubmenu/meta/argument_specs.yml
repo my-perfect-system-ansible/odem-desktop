@@ -41,3 +41,8 @@ argument_specs:
         required: false
         default: "1.0"
         description: "Version string to substitute in theme.txt (replaces CFG_VERSION placeholder)"
+      grubmenu_enable_regenerate:
+        type: bool
+        required: false
+        default: true
+        description: "Regenerate the GRUB configuration after theme deployment (update-grub / grub2-mkconfig)"

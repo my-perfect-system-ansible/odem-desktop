@@ -1,12 +1,28 @@
 ---
-# Default verify: smoke-test passes if converge completed without error.
-# Replace with role-specific assertions (stat / package / command) when
-# adding semantic tests.
+# Lightweight verify for odem.desktop.rofi: the package, system themes
+# directory and per-user config exist.
 
 - name: Verify
   hosts: all
   become: true
   tasks:
-    - name: Converge completed successfully
-      ansible.builtin.debug:
-        msg: "Smoke test for odem.desktop.rofi passed (converge ran without error)."
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: rofi package is present
+      ansible.builtin.assert:
+        that: ansible_facts.packages['rofi'] is defined
+        msg: rofi package missing
+
+    - name: System rofi themes directory exists
+      ansible.builtin.stat:
+        path: /usr/share/rofi/themes
+      register: rofi_themes_dir
+      failed_when: not rofi_themes_dir.stat.exists
+
+    - name: Per-user rofi config exists
+      ansible.builtin.stat:
+        path: /home/molecule_user/.config/rofi
+      register: rofi_config
+      failed_when: not rofi_config.stat.exists

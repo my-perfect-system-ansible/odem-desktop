@@ -1,6 +1,6 @@
 ---
 # Minimal converge: invoke the role with default vars + a synthetic user
-# so identity-resolved consumers see something without enabling all roles.
+# so identity-resolved consumers see something.
 
 - name: Converge
   hosts: all
@@ -11,5 +11,7 @@
         user_roles: {}
     user_list:
       - name: molecule_user
+    # Container /boot is not a real boot mount — skip grub.cfg regeneration.
+    grubmenu_enable_regenerate: false
   roles:
     - role: odem.desktop.grubmenu
