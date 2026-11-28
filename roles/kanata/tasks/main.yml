@@ -184,6 +184,21 @@
     - entity.user_roles.desktop_kanata | default(false)
     - entity.state == 'present'
 
+- name: Ensure per-user kanata config directory exists
+  ansible.builtin.file:
+    path: "{{ entity.home }}/.config/kanata"
+    state: directory
+    owner: "{{ entity.name }}"
+    group: "{{ entity.group | default(entity.name) }}"
+    mode: "0700"
+  loop: "{{ user_resolved }}"
+  loop_control:
+    loop_var: entity
+    label: "{{ entity.name }}"
+  when:
+    - entity.user_roles.desktop_kanata | default(false)
+    - entity.state == 'present'
+
 - name: Deploy per-user kanata configuration tree
   ansible.builtin.copy:
     src: "{{ kanata_repo_dest }}/config/kanata/"
@@ -191,7 +206,12 @@
     remote_src: true
     owner: "{{ entity.name }}"
     group: "{{ entity.group | default(entity.name) }}"
-    mode: "0600"
+    # No mode here: with remote_src + directory src, copy applies mode to
+    # the destination dir itself (0600 -> drw-------, untraversable by its
+    # owner). The dir is pre-created at 0700 above; directory_mode covers
+    # subdirs; files keep their source (git) modes. Same fix as
+    # odem.terminal.nvim / odem.desktop.qtile (see AGENTS.md).
+    directory_mode: "0700"
   loop: "{{ user_resolved }}"
   loop_control:
     loop_var: entity

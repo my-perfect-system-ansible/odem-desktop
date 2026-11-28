@@ -42,6 +42,10 @@
     state: started
   # Fedora ships no systemd preset for lightdm — the unit stays disabled
   # after install. Debian's package postinst already enables it.
+  # NOTE: starting lightdm mid-play seizes the console (the greeter X
+  # server takes the active VT) — run the playbook from another VT or
+  # over ssh and let it finish; a Ctrl-C here skips the graphical-default
+  # link, the autologin dropin/PAM/group and every later role.
   when:
     - ansible_facts['os_family'] == 'RedHat'
     - lightdm_enable_service | bool
